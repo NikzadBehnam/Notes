@@ -1,0 +1,210 @@
+{
+  "info": {
+    "_postman_id": "1450280b-c439-428c-bb49-f1d2a3345275",
+    "name": "Abaco_SitiAgreementAPI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12974589",
+    "_collection_link": "https://go.postman.co/collection/12974589-1450280b-c439-428c-bb49-f1d2a3345275?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "getFiliere",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere?filter=pk_cuaa eq 418466",
+          "protocol": "https",
+          "host": [
+            "cold-dev",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_sso",
+            "v1",
+            "filiere"
+          ],
+          "query": [
+            {
+              "key": "filter",
+              "value": "pk_cuaa eq 418466"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getFiliera",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/1",
+          "protocol": "https",
+          "host": [
+            "cold-dev",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_sso",
+            "v1",
+            "filiere",
+            "1"
+          ],
+          "query": [
+            {
+              "key": "filter",
+              "value": "pk_cuaa eq 418466",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "createFiliera",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"codice_filiera\": \"FIL-2026-008\",\r\n    \"descrizione\": \"Filiera specializzata nella produzione di agrumi destinati alla trasformazione industriale.\",\r\n    \"coltura\": \"Arancio\",\r\n    \"varieta\": \"Tarocco\",\r\n    \"pk_cuaa\": 418466\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere",
+          "protocol": "https",
+          "host": [
+            "cold-dev",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_sso",
+            "v1",
+            "filiere"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updateFiliera",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"codice_filiera\": \"FIL-2026-008\",\r\n    \"descrizione\": \"Filiera specializzata nella produzione di agrumi destinati alla trasformazione industriale.\",\r\n    \"coltura\": \"Arancio\",\r\n    \"varieta\": \"Tarocco\",\r\n    \"pk_cuaa\": 418466\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/5",
+          "protocol": "https",
+          "host": [
+            "cold-dev",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_sso",
+            "v1",
+            "filiere",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deleteFiliera",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/5",
+          "protocol": "https",
+          "host": [
+            "cold-dev",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_sso",
+            "v1",
+            "filiere",
+            "5"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

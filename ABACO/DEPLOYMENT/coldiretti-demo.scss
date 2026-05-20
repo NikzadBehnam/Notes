@@ -1,0 +1,309 @@
+/* COLORS - PALETTES - CSS VARIABLES FOR TAILWIND */
+
+:root {
+
+    --brand-yellow-100: #FEE879;
+    --brand-yellow-200: #FEE879;
+    --brand-yellow-300: #FEE879;
+    --brand-yellow-400: #FEE879;
+    --brand-yellow-500: #FED91F;
+    --brand-yellow-600: #E3BD01;
+
+    --brand-black-200: #808388;
+    --brand-black-300: #808388;
+    --brand-black-400: #393e46;
+    --brand-black-500: #000000;
+
+    --bg-menu-400: #2d3748; // bg-selected
+    --bg-menu-500: #000; // bg-normal
+    --bg-menu-600: #1a202c; // bg-hover
+    --color-menu-400: #fff; // arrow-hover
+    --color-menu-500: #a0aec0; // text-selected
+    --color-menu-600: #a0aec0; // text-selected
+    --color-menu-700: #545F72; // container-text
+
+    --bg-sidebar-compact-menu: #fff7e3;
+    --bg-active-sidebar-compact-menu-button: #ffceb1;
+    --bg-hover-sidebar-compact-menu-button: #ffceb1;
+    --text-sidebar-compact-menu-button: #61382c;
+    --text-active-sidebar-compact-menu-button: #61382c;
+
+    --bg-login-brand-panel: #FED91F;
+
+    --color-navbar-border: #dcb800; // navbar separator border
+    --color-navbar-menu-text: rgba(40,40,30,0.8); // navbar horizontal menu text
+    --color-navbar-menu-text-selected: #000; // navbar horizontal menu selectedtext
+
+    --primary-50: #ececed;
+    --primary-100: #D8D8DA;
+    --primary-200: #B1B1B5;
+    --primary-300: #8A898F;
+    --primary-400: #63626A;
+    --primary-500: #3c3b45;
+    --primary-600: #302F37;
+    --primary-700: #242329;
+    --primary-800: #18181C;
+    --primary-900: #0C0C0E;
+
+    --secondary-50: #F6F6F5;
+    --secondary-100: #EEECEC;
+    --secondary-200: #DCDAD8;
+    --secondary-300: #CBC7C5;
+    --secondary-400: #B9B5B1;
+    --secondary-500: #a8a29e;
+    --secondary-600: #89817C;
+    --secondary-700: #67615C;
+    --secondary-800: #45403E;
+    --secondary-900: #22201F;
+
+    --success-50: #F1F6F3;
+    --success-100: #E2EDE8;
+    --success-200: #C5DBD1;
+    --success-300: #A9CAB9;
+    --success-400: #8CB8A2;
+    --success-500: #6FA68B;
+    --success-600: #55896F;
+    --success-700: #3F6753;
+    --success-800: #2A4438;
+    --success-900: #15221C;
+
+    --danger-50: #FDF1EE;
+    --danger-100: #FAE2DC;
+    --danger-200: #F5C5B9;
+    --danger-300: #F1A997;
+    --danger-400: #EC8C74;
+    --danger-500: #E76F51;
+    --danger-600: #DB441E;
+    --danger-700: #A53317;
+    --danger-800: #6E220F;
+    --danger-900: #371108;
+
+    --warning-50: #FEF6EF;
+    --warning-100: #FDECDF;
+    --warning-200: #FBDAC0;
+    --warning-300: #F8C7A0;
+    --warning-400: #F6B581;
+    --warning-500: #F4A261;
+    --warning-600: #F07C21;
+    --warning-700: #BF5C0D;
+    --warning-800: #803D09;
+    --warning-900: #401F04;
+
+    --info-50: #ECF0F2;
+    --info-100: #D8E2E5;
+    --info-200: #B1C4CB;
+    --info-300: #8AA7B0;
+    --info-400: #638996;
+    --info-500: #3c6c7c;
+    --info-600: #0A545F;
+    --info-700: #083F47;
+    --info-800: #052A30;
+    --info-900: #031518;
+
+    --purple-50: #F1F1F5;
+    --purple-100: #E3E3EC;
+    --purple-200: #C7C7D9;
+    --purple-300: #AAABC5;
+    --purple-400: #8E8FB2;
+    --purple-500: #72739f;
+    --purple-600: #585982;
+    --purple-700: #424361;
+    --purple-800: #2C2D41;
+    --purple-900: #161620;
+
+    --rose-50: #F8F1F4;
+    --rose-100: #F2E3E9;
+    --rose-200: #E4C7D3;
+    --rose-300: #D7ABBD;
+    --rose-400: #C98FA7;
+    --rose-500: #BC7391;
+    --rose-600: #A44E72;
+    --rose-700: #7B3B55;
+    --rose-800: #522739;
+    --rose-900: #29141C;
+
+    --olive-50: #F0F2EF;
+    --olive-100: #E0E6DE;
+    --olive-200: #C1CDBD;
+    --olive-300: #A2B39C;
+    --olive-400: #839A7B;
+    --olive-500: #64815a;
+    --olive-600: #506748;
+    --olive-700: #3C4D36;
+    --olive-800: #283424;
+    --olive-900: #141A12;
+
+    --teal-50: #EBF7F5;
+    --teal-100: #D6EEEB;
+    --teal-200: #AEDED7;
+    --teal-300: #85CDC2;
+    --teal-400: #5DBDAE;
+    --teal-500: #34AC9A;
+    --teal-600: #2A8A7B;
+    --teal-700: #1F675C;
+    --teal-800: #15453E;
+    --teal-900: #0A221F;
+
+    --cyan-50: #EBF5F6;
+    --cyan-100: #D7EBEC;
+    --cyan-200: #AFD7DA;
+    --cyan-300: #87C2C7;
+    --cyan-400: #5FAEB5;
+    --cyan-500: #379AA2;
+    --cyan-600: #2C7B82;
+    --cyan-700: #215C61;
+    --cyan-800: #163E41;
+    --cyan-900: #0B1F20;
+
+    --color-bg-100: #FFFFFF;
+    --color-bg-400: #f9f9f9;
+    --color-bg-500: #f6f5f4;
+    --color-bg-900: #000000;
+
+    --color-border: #eeebe7;
+    --color-text: #3c3b45;
+    --color-text-opposite: #ffffff;
+    --color-button-text-filled: #ffffff;
+    --color-icon: #CBC7C5;
+    --color-label-primary: #968c8d;
+    --color-label-secondary: #BDB8B3;
+
+}
+
+[data-theme="dark"] {
+
+    --primary-50: #211F21;
+    --primary-100: #211F21;
+    --primary-200: #413E42;
+    --primary-300: #625D63;
+    --primary-400: #837C84;
+    --primary-500: #A29DA3;
+    --primary-600: #B5B1B5;
+    --primary-700: #C7C4C8;
+    --primary-800: #DAD8DA;
+    --primary-900: #ECEBED;
+
+    --secondary-50: #1F1C19;
+    --secondary-100: #1F1C19;
+    --secondary-200: #3F3732;
+    --secondary-300: #5E534C;
+    --secondary-400: #7E6F65;
+    --secondary-500: #9a8b81;
+    --secondary-600: #AEA29A;
+    --secondary-700: #C2B9B3;
+    --secondary-800: #D7D1CD;
+    --secondary-900: #EBE8E6;
+
+    --success-50: #1E2C14;
+    --success-100: #1E2C14;
+    --success-200: #3B5727;
+    --success-300: #59833B;
+    --success-400: #77AF4E;
+    --success-500: #98c379;
+    --success-600: #ADCF94;
+    --success-700: #C1DBAF;
+    --success-800: #D6E7C9;
+    --success-900: #EAF3E4;
+
+    --danger-50: #370C0F;
+    --danger-100: #370C0F;
+    --danger-200: #6E171E;
+    --danger-300: #A5232D;
+    --danger-400: #D43542;
+    --danger-500: #e06c75;
+    --danger-600: #E68991;
+    --danger-700: #ECA7AC;
+    --danger-800: #F3C4C8;
+    --danger-900: #F9E2E3;
+
+    --warning-50: #301F0E;
+    --warning-100: #301F0E;
+    --warning-200: #603D1D;
+    --warning-300: #8F5C2B;
+    --warning-400: #BF7B3A;
+    --warning-500: #d19a66;
+    --warning-600: #DAAE85;
+    --warning-700: #E3C2A3;
+    --warning-800: #EDD7C2;
+    --warning-900: #F6EBE0;
+
+    --info-50: #0F2629;
+    --info-100: #0F2629;
+    --info-200: #1E4C52;
+    --info-300: #2D737B;
+    --info-400: #3B99A5;
+    --info-500: #56b6c2;
+    --info-600: #78C5CE;
+    --info-700: #9AD3DA;
+    --info-800: #BBE2E7;
+    --info-900: #DDF0F3;
+
+    --purple-50: #1B1C28;
+    --purple-100: #292A3D;
+    --purple-200: #373851;
+    --purple-300: #525379;
+    --purple-400: #71729F;
+    --purple-500: #999ABA;
+    --purple-600: #ADAEC8;
+    --purple-700: #C2C2D6;
+    --purple-800: #D6D7E3;
+    --purple-900: #EBEBF1;
+
+    --rose-50: #170B10;
+    --rose-100: #2E1620;
+    --rose-200: #5D2D41;
+    --rose-300: #8B4361;
+    --rose-400: #B36183;
+    --rose-500: #C98FA7;
+    --rose-600: #D4A5B9;
+    --rose-700: #DFBCCA;
+    --rose-800: #E9D2DC;
+    --rose-900: #F4E9ED;
+
+    --olive-50: #1A1F18;
+    --olive-100: #272F24;
+    --olive-200: #343F30;
+    --olive-300: #4E5E48;
+    --olive-400: #687E60;
+    --olive-500: #839A7B;
+    --olive-600: #9CAE95;
+    --olive-700: #B5C2B0;
+    --olive-800: #CDD7CA;
+    --olive-900: #E6EBE5;
+
+    --teal-50: #071210;
+    --teal-100: #0E2421;
+    --teal-200: #1D4842;
+    --teal-300: #2B6C62;
+    --teal-400: #3A9083;
+    --teal-500: #48B4A4;
+    --teal-600: #6DC3B6;
+    --teal-700: #91D2C8;
+    --teal-800: #B6E1DB;
+    --teal-900: #DAF0ED;
+
+    --cyan-50: #0C2A2A;
+    --cyan-100: #123F3F;
+    --cyan-200: #1E6969;
+    --cyan-300: #2A9293;
+    --cyan-400: #36BCBD;
+    --cyan-500: #57CECF;
+    --cyan-600: #7CD9DA;
+    --cyan-700: #A2E4E5;
+    --cyan-800: #C7EFEF;
+    --cyan-900: #DAF4F4;
+
+    --color-bg-100: #242329;
+    --color-bg-400: #302F37;
+    --color-bg-500: #302F37;
+    --color-bg-900: #FFFFFF;
+
+    --color-border: #3c3b45;
+    --color-text: #B1B1B5;
+    --color-text-opposite: #242329;
+    --color-button-text-filled: #242329;
+    --color-icon: #5a5354;
+    --color-label-primary: #7e7c83;
+    --color-label-secondary: #65646a;
+
+}
