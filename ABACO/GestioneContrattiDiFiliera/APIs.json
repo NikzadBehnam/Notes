@@ -205,6 +205,97 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "getFilieraAgreements",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://devs4f.fe.abacogroup.eu/sitiagri-rest-api/api_basic/v1/agreements/agreements?subject_id=543349",
+          "protocol": "https",
+          "host": [
+            "devs4f",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_basic",
+            "v1",
+            "agreements",
+            "agreements"
+          ],
+          "query": [
+            {
+              "key": "count",
+              "value": "25",
+              "disabled": true
+            },
+            {
+              "key": "offset",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "pkid_filiera",
+              "value": "1",
+              "disabled": true
+            },
+            {
+              "key": "subject_id",
+              "value": "543349"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "addAgreementToFiliera",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://devs4f.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/1/agreements/98",
+          "protocol": "https",
+          "host": [
+            "devs4f",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_sso",
+            "v1",
+            "filiere",
+            "1",
+            "agreements",
+            "98"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }

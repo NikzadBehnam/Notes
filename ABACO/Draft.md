@@ -616,26 +616,3 @@ For now only leave a clear TODO/comment if needed:
 ```ts
 // TODO #216647: connect producer contractor to appezzamenti selection page
 ```
-
-
-
- private headers: AbcHeader[] = [
-        { title: "ID", itemName: "id", sortable: true },
-        { title: "Codice", itemName: "codice", sortable: true },
-        { title: "Descrizione", itemName: "descrizione", sortable: true },
-        { title: "Coltura", itemName: "coltura", sortable: true },
-        { title: "Varieta", itemName: "varieta", sortable: true },
-        { title: "Data Inizio", itemName: "dataInizio", sortable: true },
-        { title: "Data Fine", itemName: "dataFine", sortable: true },
-        { title: "CUAA Capo Filiera", itemName: "cuaaCapoFiliera", sortable: true },
-        { title: "Capo Filiera", itemName: "capoFiliera", sortable: true },
-        { title: "N. Contratti attivi", itemName: "contrattiAttivi", sortable: true },
-    ];
-
-the title of the headers should be i18n labled
-
-so I need you to generate a table haveing for every title
- - proper english translate
- - italian (as they are)
- - a lable (ex: cuaa-repo)
-

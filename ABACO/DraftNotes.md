@@ -1076,7 +1076,7 @@ Module:widgets-container-module
     necessario aggiornamento i18n
     Da compilare portal
 
-   4. Ticket #216647 — Nuova pagina selezione appezzamenti per contraente
+   1. Ticket #216647 — Nuova pagina selezione appezzamenti per contraente
 
         (New Plot Selection Page for Contractor)
 
@@ -1095,3 +1095,20 @@ Module:widgets-container-module
 
 
 
+
+# https://abacogroup.easyredmine.com/issues/217590
+    BRNACH: fix/planned-harvest-product-frontend-217591
+    MODULE: activities-module
+
+    Rilasciato activities-module v2.69.7
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/217591
+    BRNACH: fix/semente-remove-banca-dati-option-217590
+    MODULE: assets-module
+
+    Rilasciato assets-module v2.40.10
+    necessario aggiornamento i18n
+    Da compilare portal
