@@ -4,7 +4,7 @@
     "name": "Abaco_SitiAgreementAPI",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "12974589",
-    "_collection_link": "https://go.postman.co/collection/12974589-1450280b-c439-428c-bb49-f1d2a3345275?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/12974589-1450280b-c439-428c-bb49-f1d2a3345275?source=collection_li…
   },
   "item": [
     {
@@ -61,7 +61,7 @@
           }
         ],
         "url": {
-          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/1",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere/1",
           "protocol": "https",
           "host": [
             "cold-dev",
@@ -73,6 +73,8 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere",
             "1"
           ],
@@ -111,7 +113,7 @@
           }
         },
         "url": {
-          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere",
           "protocol": "https",
           "host": [
             "cold-dev",
@@ -123,6 +125,8 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere"
           ]
         }
@@ -153,7 +157,7 @@
           }
         },
         "url": {
-          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/5",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere/5",
           "protocol": "https",
           "host": [
             "cold-dev",
@@ -165,6 +169,8 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere",
             "5"
           ]
@@ -187,7 +193,7 @@
           }
         ],
         "url": {
-          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/5",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere/50",
           "protocol": "https",
           "host": [
             "cold-dev",
@@ -199,8 +205,10 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere",
-            "5"
+            "50"
           ]
         }
       },
@@ -221,17 +229,17 @@
           }
         ],
         "url": {
-          "raw": "https://devs4f.fe.abacogroup.eu/sitiagri-rest-api/api_basic/v1/agreements/agreements?subject_id=543349",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/agreements/agreements?subject_id=420…,
           "protocol": "https",
           "host": [
-            "devs4f",
+            "cold-dev",
             "fe",
             "abacogroup",
             "eu"
           ],
           "path": [
             "sitiagri-rest-api",
-            "api_basic",
+            "api_sso",
             "v1",
             "agreements",
             "agreements"
@@ -254,7 +262,7 @@
             },
             {
               "key": "subject_id",
-              "value": "543349"
+              "value": "420086"
             }
           ]
         }
@@ -276,10 +284,10 @@
           }
         ],
         "url": {
-          "raw": "https://devs4f.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/1/agreements/98",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere/1/agreements…,
           "protocol": "https",
           "host": [
-            "devs4f",
+            "cold-dev",
             "fe",
             "abacogroup",
             "eu"
@@ -288,10 +296,12 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere",
             "1",
             "agreements",
-            "98"
+            "1"
           ]
         }
       },
