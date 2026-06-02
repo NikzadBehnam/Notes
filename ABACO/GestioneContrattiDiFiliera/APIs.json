@@ -4,7 +4,7 @@
     "name": "Abaco_SitiAgreementAPI",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "12974589",
-    "_collection_link": "https://go.postman.co/collection/12974589-1450280b-c439-428c-bb49-f1d2a3345275?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/12974589-1450280b-c439-428c-bb49-f1d2a3345275?source=collection_li…
   },
   "item": [
     {
@@ -61,7 +61,7 @@
           }
         ],
         "url": {
-          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/1",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere/1",
           "protocol": "https",
           "host": [
             "cold-dev",
@@ -73,6 +73,8 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere",
             "1"
           ],
@@ -111,7 +113,7 @@
           }
         },
         "url": {
-          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere",
           "protocol": "https",
           "host": [
             "cold-dev",
@@ -123,6 +125,8 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere"
           ]
         }
@@ -153,7 +157,7 @@
           }
         },
         "url": {
-          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/5",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere/5",
           "protocol": "https",
           "host": [
             "cold-dev",
@@ -165,6 +169,8 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere",
             "5"
           ]
@@ -187,7 +193,7 @@
           }
         ],
         "url": {
-          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/filiere/5",
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere/50",
           "protocol": "https",
           "host": [
             "cold-dev",
@@ -199,8 +205,103 @@
             "sitiagri-rest-api",
             "api_sso",
             "v1",
+            "subjects",
+            "418466",
             "filiere",
-            "5"
+            "50"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getFilieraAgreements",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/agreements/agreements?subject_id=420…,
+          "protocol": "https",
+          "host": [
+            "cold-dev",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_sso",
+            "v1",
+            "agreements",
+            "agreements"
+          ],
+          "query": [
+            {
+              "key": "count",
+              "value": "25",
+              "disabled": true
+            },
+            {
+              "key": "offset",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "pkid_filiera",
+              "value": "1",
+              "disabled": true
+            },
+            {
+              "key": "subject_id",
+              "value": "420086"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "addAgreementToFiliera",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://cold-dev.fe.abacogroup.eu/sitiagri-rest-api/api_sso/v1/subjects/418466/filiere/1/agreements…,
+          "protocol": "https",
+          "host": [
+            "cold-dev",
+            "fe",
+            "abacogroup",
+            "eu"
+          ],
+          "path": [
+            "sitiagri-rest-api",
+            "api_sso",
+            "v1",
+            "subjects",
+            "418466",
+            "filiere",
+            "1",
+            "agreements",
+            "1"
           ]
         }
       },
