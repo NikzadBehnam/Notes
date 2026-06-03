@@ -9,7 +9,7 @@
 
 
 # Generatl Deployment Checklist
--[] release v150.0.6 from master
+-[] release v150.0.8 from master
 -[] release the i18n
 -[] release the chart
 
@@ -53,21 +53,21 @@
     - [] Run `npm i` to install updated packages.
 
 1. Local Testing
-  -[] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
-  -[] Copy the theme `.scss` file to `src/assets/styles/themes`.
+  -[+] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
+  -[+] Copy the theme `.scss` file to `src/assets/styles/themes`.
       - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/blob/master/themes/coldiretti-demo.scss?ref_type=heads
-  -[] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
+  -[+] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
   -[+] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
   -[+] *⚠️ Remove the theme file before committing*.
   -[+] Run the linter to check for code quality issues: `npm run lint`.
-  -[] Open the portal in a browser and confirm it loads without errors.
+  -[+] Open the portal in a browser and confirm it loads without errors.
 
 
 1. Commit, Push, and Tag
 -[+] Commit all changes, "Update packages"
 -[+] Push the changes to the remote repository.
 -[+] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
-- [] Create and push a new release tag (e.g., `v1.2.3`).
+- [+] Create and push a new release tag (e.g., `v1.2.3`).
   - "`npm version patch`" for bugfixes, "`npm version minor`" for features, "`npm version major`"
     - if you were needed to change the tag manually in package.json remember to change it also in package-lock
   - push the tag of the version "`git push --follow-tag`"
@@ -282,10 +282,11 @@ I create the new branch from the version before releasing th malta portal
 La pipeline per i18n-repository v149.0.2 partita
 
 
-La pipeline per portal v150.0.6 partita (Coldiretti)
-https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/173458
+La pipeline per portal v150.0.7 partita (Coldiretti)
+https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/174002
 
 
 Tickets
-https://abacogroup.easyredmine.com/issues/217590
-https://abacogroup.easyredmine.com/issues/217591
+https://abacogroup.easyredmine.com/issues/217610
+
+Rilasciato  con portal v150.0.7

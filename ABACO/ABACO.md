@@ -1726,3 +1726,14 @@ Rischio difesa
 
 
 Are all using COLDIRETTI_PLOT_MONITORING
+
+
+
+
+COLD DEV - GET: sitiagri-rest-api/api_sso/v1/people_registry/subjects?offset=0&count=25&specie=Arancio
+
+this Endpoint should return the parties
+
+in any case I am trying it returns nothing
+
+can you help me to find a case with parties

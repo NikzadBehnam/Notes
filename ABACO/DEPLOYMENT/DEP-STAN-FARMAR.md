@@ -1,5 +1,5 @@
 # Generatl Deployment Checklist
--[+] release v150.0.4 from master
+-[] release v150.0.4 from master
 -[] release the i18n v150.0.1
 -[] release the chart 
 
@@ -19,22 +19,22 @@
 1. Branching
  git checkout -b branch/149.5.2 master
 
-- [+] Determine the correct branch:v150.0.0
-  - [+] Latest Version: Working on `master`.
+- [] Determine the correct branch:v150.0.0
+  - [] Latest Version: Working on `master`.
   - [] Older Version: Create a new branch from the specific tag (e.g., `git checkout -b branch/0.1.2+1 v0.1.2`).
 
 1. Synchronize Environment
 
-- [+] Fetch latest changes from the remote: `git fetch`
-- [+] Pull the latest code: `git pull`
-- [+] Install dependencies from lock file: `npm ci` (for coldiretti it is ready)
+- [] Fetch latest changes from the remote: `git fetch`
+- [] Pull the latest code: `git pull`
+- [] Install dependencies from lock file: `npm ci` (for coldiretti it is ready)
 
 3. Update Dependencies
 
 - [+] Choose update method:
   - [+] Latest Version (`master`):
     - [+] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.
-    - [+] Manually verify and adjust versions for `web-common`, `web-components`, and `Vue 3` if necessary.
+    - [] Manually verify and adjust versions for `web-common`, `web-components`, and `Vue 3` if necessary.
     - [+] Run `npm i` to install updated packages.
   - [] Older Version:
     - [] Manually update specific module versions as detailed in the tickets.
@@ -42,7 +42,7 @@
     - [] Run `npm i` to install updated packages.
 
 1. Commit, Push, and Tag
-- [] IMPORTANT NOTE: IF YOU MADE THE BRANCH FROM MASTER, AFTER PUSHING THE NEW BRANCH, MERGE IT WITH MASTER TO MAKE THE NEW TAG FROM MASTER
+- [+] IMPORTANT NOTE: IF YOU MADE THE BRANCH FROM MASTER, AFTER PUSHING THE NEW BRANCH, MERGE IT WITH MASTER TO MAKE THE NEW TAG FROM MASTER
 - [+] Commit all changes, "Update packages"
 - [+] Push the changes to the remote repository.
 
@@ -72,8 +72,8 @@ New script for generating the backup.zip by Massimiliano Casadei
 
 .\update_backup_script.bat v144.1.2
 
-- [+] Clone or navigate to the `i18n-repository`.
-- [+] Fetch and pull the latest changes.
+- [] Clone or navigate to the `i18n-repository`.
+- [] Fetch and pull the latest changes.
 - [] Run the update script with the new portal tag: `.\update_backup_script.bat v146.0.0`. (on powershell terminal)
 - [] Add and commit the changes with the message "Updated backup".
 - [] Push the commit to the remote repository.
@@ -138,11 +138,8 @@ La pipeline per il i18n v150.0.2 è partita
 https://gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/171349
 
 
-La pipeline per il portal v150.0.4 è partita
-https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/172039
+La pipeline per il portal v150.0.9 partita
+https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/174319
 
-
-Ticket
-https://abacogroup.easyredmine.com/issues/216912
-https://abacogroup.easyredmine.com/issues/216583
-https://abacogroup.easyredmine.com/issues/190509
+Fix
+seeds-monitoring widget i18n label fix

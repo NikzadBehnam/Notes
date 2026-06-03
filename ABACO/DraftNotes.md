@@ -984,15 +984,6 @@ Module:widgets-container-module
     non necessario aggiornamento i18n
     Da compilare portal
 
-# https://abacogroup.easyredmine.com/issues/214148
-    BRNACH: fix/ddt-operation-type-214148
-    MODULE: assets-module
-    
-    Rilasciato assets-module v2.40.8
-    non necessario aggiornamento i18n
-    Da compilare portal
-
-
 # https://abacogroup.easyredmine.com/issues/190509
     BRNACH: feature/190509-fix-qr-traceability-ordering
     MODULE: assets-module
@@ -1020,7 +1011,7 @@ Module:widgets-container-module
 ## ....... new supply chain contract......... ###
     
 # https://abacogroup.easyredmine.com/issues/216641
-    BRNACH: feature/216641-filiera-management
+    BRNACH: feat/216641-modulo-ges-contratti-di-filiera
     MODULE: agreements-module
 
     Rilasciato agreements-module 
@@ -1094,8 +1085,6 @@ Module:widgets-container-module
 
 
 
-
-
 # https://abacogroup.easyredmine.com/issues/217590
     BRNACH: fix/planned-harvest-product-frontend-217591
     MODULE: activities-module
@@ -1112,3 +1101,99 @@ Module:widgets-container-module
     Rilasciato assets-module v2.40.10
     necessario aggiornamento i18n
     Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/217610
+    BRNACH: fix/field-visit-217610
+    MODULE: widgets-container-module 
+
+    Rilasciato widgets-container-module v1.22.4
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+
+some change for needed in UI or Nuovo contratto form
+1 - the wide of the form is too large, make it less keep in the center
+
+
+
+
+some change for needed in UI or Contratti table
+
+- I have attached WarehouseDetailTile.vue component with its UI screenshot from assets module
+- add the three status of the contracts with circled points at the header of the table
+- add the total contract also on the header
+
+
+# https://abacogroup.easyredmine.com/issues/214148
+    BRNACH: fix/ddt-operation-type-214148
+    MODULE: assets-module
+    
+    Rilasciato assets-module v2.40.8
+    Rilasciato assets-module v2.40.11
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+
+
+
+On adding a new contract using the post endpoint bellow, I see that it is not apearing in the list of contracts
+i ask the reason from team backend and they update me with information you can see in the message screenshot
+
+
+POST: http://localhost:9090/sitiagri-rest-api/api_sso/v1/agreements/agreements
+
+payload
+{
+    "agreement_type_id": "2",
+    "agreement_code": "GH-2323",
+    "agreement_desc": "GH-2323 Description",
+    "end_date": "1782770400000",
+    "start_date": "1780264800000",
+    "subjects": [
+        {
+            "sco_party_type": "SCAFFI",
+            "subject_id": "411346"
+        },
+        {
+            "sco_party_type": "SCHEAD",
+            "subject_id": "411368"
+        }
+    ]
+}
+----------------------------------------
+
+and as per the new infomation they said bellow is the updated version of endpoint response
+
+{
+    "offset": 0,
+    "count": 1,
+    "totalcount": 1,
+    "records": [
+        {
+            "varieta": null,
+            "codice_filiera": "FIL-2026-012",
+            "descrizione": "Filiera dedicata alla produzione di olio",
+            "coltura": "OLIVE",
+            "pk_cuaa_capo_filiera": 418466,
+            "cuaa_capo_filiera": "cicciopasticcio",
+            "denominazione_capo_filiera": "PANDINI LORENZO",
+            "pk_cuaa": 411306,
+            "cuaa": "00060700564",
+            "denominazione": "COOPERNOCCIOLE SOCIETA' COOPERATIVA AGRICOLA",
+            "num_contratti_attivi": 2,
+            "pkid_filiera": 7,
+            "dt_inizio": 1779198951000,
+            "dt_fine": 253402210800000,
+            "utente": "ADMIN",
+            "dt_update": 1779198951000,
+            "dt_insert": 1779198951000,
+            "dt_delete": 1779803507000
+        }
+    ]
+}
+
+
+Have a good check the code and update the front end carefully
