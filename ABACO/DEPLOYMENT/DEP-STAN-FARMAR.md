@@ -32,9 +32,9 @@
 3. Update Dependencies
 
 - [+] Choose update method:
-  - [+] Latest Version (`master`):
+  - [] Latest Version (`master`):
     - [+] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.
-    - [] Manually verify and adjust versions for `web-common`, `web-components`, and `Vue 3` if necessary.
+    - [+] Manually verify and adjust versions for `web-common`, `web-components`, and `Vue 3` if necessary.
     - [+] Run `npm i` to install updated packages.
   - [] Older Version:
     - [] Manually update specific module versions as detailed in the tickets.
@@ -46,8 +46,8 @@
 - [+] Commit all changes, "Update packages"
 - [+] Push the changes to the remote repository.
 
-- [] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
-- [+] Create a new release tag (e.g., `v1.2.3`).
+- [+] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
+- [] Create a new release tag (e.g., `v1.2.3`).
   - "`npm version patch`" for bugfixes, "`npm version minor`" for features, "`npm version major`"
   - push the tag of the version "`git push --follow-tag`"
   - *⚠️ remember when you do a MAJOR to always release a new i18n*
@@ -135,11 +135,11 @@ New script for generating the backup.zip by Massimiliano Casadei
 ----------- 
 
 La pipeline per il i18n v150.0.2 è partita
-https://gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/171349
 
 
-La pipeline per il portal v150.0.9 partita
-https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/174319
 
-Fix
-seeds-monitoring widget i18n label fix
+La pipeline per il portal v150.0.11 partita
+https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/176340
+
+Tickets:
+https://abacogroup.easyredmine.com/issues/217610
