@@ -984,15 +984,6 @@ Module:widgets-container-module
     non necessario aggiornamento i18n
     Da compilare portal
 
-# https://abacogroup.easyredmine.com/issues/214148
-    BRNACH: fix/ddt-operation-type-214148
-    MODULE: assets-module
-    
-    Rilasciato assets-module v2.40.8
-    non necessario aggiornamento i18n
-    Da compilare portal
-
-
 # https://abacogroup.easyredmine.com/issues/190509
     BRNACH: feature/190509-fix-qr-traceability-ordering
     MODULE: assets-module
@@ -1020,10 +1011,10 @@ Module:widgets-container-module
 ## ....... new supply chain contract......... ###
     
 # https://abacogroup.easyredmine.com/issues/216641
-    BRNACH: feature/216641-filiera-management
+    BRNACH: feat/modulo-contratti-di-filiera
     MODULE: agreements-module
 
-    Rilasciato agreements-module 
+    Rilasciato agreements-module v1.2.0
     necessario aggiornamento i18n
     Da compilare portal
 
@@ -1037,10 +1028,10 @@ Module:widgets-container-module
 
 
 # https://abacogroup.easyredmine.com/issues/216643
-    BRNACH: feature/216643-filiera-contracts-page
+    BRNACH: feat/modulo-contratti-di-filiera
     MODULE: agreements-module
 
-    Rilasciato agreements-module 
+    Rilasciato agreements-module v1.2.0
     necessario aggiornamento i18n
     Da compilare portal
 
@@ -1053,10 +1044,10 @@ Module:widgets-container-module
 
 
 # https://abacogroup.easyredmine.com/issues/216645
-    BRNACH: feature/216645-create-filiera-contract
+    BRNACH: feat/modulo-contratti-di-filiera
     MODULE: agreements-module
 
-    Rilasciato agreements-module 
+    Rilasciato agreements-module v1.2.0
     necessario aggiornamento i18n
     Da compilare portal
 
@@ -1094,8 +1085,6 @@ Module:widgets-container-module
 
 
 
-
-
 # https://abacogroup.easyredmine.com/issues/217590
     BRNACH: fix/planned-harvest-product-frontend-217591
     MODULE: activities-module
@@ -1111,4 +1100,39 @@ Module:widgets-container-module
 
     Rilasciato assets-module v2.40.10
     necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/217610
+    BRNACH: fix/field-visit-217610
+    MODULE: widgets-container-module 
+
+    Rilasciato widgets-container-module v1.22.4
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/214148
+    BRNACH: fix/ddt-operation-type-214148
+    MODULE: assets-module
+    
+    Rilasciato assets-module v2.40.8
+    Rilasciato assets-module v2.40.11
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/218591
+    BRNACH: fix/218591-disable-plot-code-coldiretti
+    MODULE: crop-plan-module
+    
+    Rilasciato crop-plan-module v2.51.11
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/218590
+    BRNACH: fix/218590-planned-area-per-plot
+    MODULE: activities-module
+
+    Rilasciato activities-module v2.69.8
+    non necessario aggiornamento i18n
     Da compilare portal

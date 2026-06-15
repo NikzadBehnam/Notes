@@ -1,12 +1,12 @@
-So now that we have our project ready for initial deployment still I need some more updates and feature
+I have added an abc-tool-button on line 38 of src\modules\new-agreements\components\detail\forms\index.vue
 
-## the Dahboard UI
+do exactly bellow points
 
-the most important is the dashboard setup
-As we are using shadcn we can make it very professional meanwhile easy
-we need some table, diagrams, counters and .....
-with consistent UI and animations
+ - onclick this button call the fucntion addPlots
+ - inside src\modules\new-agreements\api\NewAgreementsApi.ts configure the API call bellow
+https://collaudo-abaco.bluarancio.com/sitiagri-rest-api/api_sso/v1/plots/subjects/4  19077/2026/plots?include_supply_chain=true&offset=0&count=300&_=1780491518967
 
+<<<<<<< HEAD
 do not start code, give me your suggesition then we can improve the concept and make some checklist then we will code step by step
 
 # -------BUILD-------
@@ -32,3 +32,6 @@ una202606@gmail.com / Una202606@Mantova
 
 https://console.neon.tech/
 una202606@gmail.com / Una202606@Mantova
+=======
+ - on triggering the addPlots function call the API
+>>>>>>> ff75526d7c1da753f5a4ee1afabf9258aac3af6a
