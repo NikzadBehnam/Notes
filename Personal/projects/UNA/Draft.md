@@ -6,7 +6,6 @@ do exactly bellow points
  - inside src\modules\new-agreements\api\NewAgreementsApi.ts configure the API call bellow
 https://collaudo-abaco.bluarancio.com/sitiagri-rest-api/api_sso/v1/plots/subjects/4  19077/2026/plots?include_supply_chain=true&offset=0&count=300&_=1780491518967
 
-<<<<<<< HEAD
 do not start code, give me your suggesition then we can improve the concept and make some checklist then we will code step by step
 
 # -------BUILD-------
@@ -32,6 +31,3 @@ una202606@gmail.com / Una202606@Mantova
 
 https://console.neon.tech/
 una202606@gmail.com / Una202606@Mantova
-=======
- - on triggering the addPlots function call the API
->>>>>>> ff75526d7c1da753f5a4ee1afabf9258aac3af6a

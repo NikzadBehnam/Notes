@@ -1,134 +1,125 @@
-# MANDATORY WORKING RULES:
-  - Do NOT make extra changes.
-  - Do NOT do unrelated refactors.
-  - Do NOT rename, move, or restructure files unless strictly necessary.
-  - Do NOT introduce new abstractions unless clearly needed for this exact ticket.
-  - Do NOT modify existing working logic unless required by this ticket.
-  - Keep the implementation very minimal.
-  - Keep the implementation descriptive and maintainable.
-  - Keep the implementation fully aligned with the existing logic and patterns already used in this module.
-  - Reuse existing company global/shared components and existing project conventions.
-  - Avoid speculative improvements.
-  - Avoid cleanup changes unrelated to this ticket.
-  - This codebase is huge, so safe integration is more important than clever refactoring.
-  - If you touch a file, only change what is needed for this ticket.
-  - Before coding, first inspect the existing logic and follow the same implementation style already used in nearby files.
-  - If multiple implementation options are possible, choose the one with:
-  - the smallest safe diff
-  - the best consistency with existing code
-- the lowest risk in a large legacy codebase
-# ------------------------
 
-- translate the old framework page into a vue page
-- skip the resume list, make directly the plot selection page
-- remove the campaign filter, take it from the navbar dropdown
-- add a supplier dropdown filter with the agreements suppliers
-- the list api will get the subject id from the supplier dropdown filter
-- post/delete to select/unselect to be taken from the old page, the number after /contract is the contract_id
-- select all/deselect all
-- use plot-talbe component as in  the activities for coldiretti, same props, especially to sho the map preview in the list
-- add subject column to plot table component
-- maybe copy map and logic from qr code plot selection, but with map preview prop
-- ask simone/lorenzo for crop/variety filter
+I need you to analyze the current branch deeply and accurately for this requirement in the Filiere/Supply Chain module.
 
-# ------------------------
+Requirement:
+On the plot/parcel selection page, when the user clicks the “Conferma” button, the system must check that at least one plot/parcel has been selected.
 
+If no plot/parcel has been selected, the user must see a clear validation message and the confirm action must not continue.
 
-```md
-Now implement the pending plot-selection fix for the new agreements feature.
+Business rule:
 
-Context:
-- We already investigated that plot selection currently does NOT enforce these two business rules:
-  1. Selectable plots must come only from agreement contractors/parties of type `PRODUTTORE`.
-  2. Selectable plots must be filtered by the species or variety configured in the linked supply chain / filiera.
-- Do not regress the existing POST/DELETE plot association behavior or the list/map synchronization.
+* The user cannot confirm the plot/parcel selection with an empty selection.
+* At least one plot/parcel must be selected before proceeding.
+* If the selected plots list is empty, show a clear message to the user.
+* The confirmation/save/navigation flow must be blocked until at least one plot/parcel is selected.
 
-Target area:
-- `C:\ABC\agreements-module\src\modules\new-agreements\components\detail\forms\index.vue`
-- `C:\ABC\agreements-module\src\modules\new-agreements\components\detail\forms\AgreementPlotsSelectionModal.vue`
-- `C:\ABC\agreements-module\src\modules\new-agreements\components\detail\forms\AgreementPlotsSelectionMap.vue`
-- `C:\ABC\agreements-module\src\modules\new-agreements\api\NewAgreementsApi.ts`
-- `C:\ABC\agreements-module\src\modules\new-agreements\components\NewFilieraAgreementForm.vue`
-- `C:\ABC\agreements-module\src\modules\new-agreements\components\stepper\PartiesStep\SearchParty.vue`
+Your task:
 
-Required investigation before coding:
-- Inspect how current agreement parties are loaded with `getAgreementPartiesForEdit`.
-- Identify the real field/code used for party type `PRODUTTORE`; do not hardcode blindly if the dictionary/API gives the value.
-- Inspect how the linked filiera exposes crop/species/variety fields, especially `crop_code` and `seed_variety_id`.
-- Check whether `getSubjectPlots` backend supports crop/species/variety params. If not, determine whether safe frontend filtering is possible from returned plot fields.
+* Analyze the code clearly and segment by segment.
+* Check the plot/parcel selection page used in the contract/Filiere flow.
+* Identify the “Conferma” button and its click handler.
+* Check where selected plots/parcels are stored.
+* Check whether the selected plots are managed by local state, props, Vuex/store, route params, or API response.
+* Check whether the page already has validation logic before confirming.
+* Check whether the same selection page is used in different modes, for example:
 
-Implementation goal:
-- When opening the `Appezzamenti` selection modal from agreement detail, fetch/load only plots belonging to producer parties of the current agreement.
-- Filter those plots by the linked filiera species/variety.
-- Keep selected plots hydrated from the agreement, so already-linked plots appear selected.
-- Preserve map/list two-way synchronization.
-- Preserve POST/DELETE API calls and update selected state using returned `plot_id`.
+  * create mode
+  * edit mode
+  * read-only mode
+  * view-only mode
+* Check whether this validation should apply only when the user is actively adding/selecting plots, and not in read-only mode.
+* Check whether selected plots can come from:
 
-Validation:
-- Run targeted TypeScript and ESLint checks for changed files.
-- Do not make unrelated refactors.
-- If backend data is insufficient for exact filtering, stop and clearly report the missing backend contract instead of guessing.
+  * table selection
+  * map selection
+  * preloaded existing contract plots
+* Confirm whether the requirement is currently missing or partially implemented in the branch.
 
-NOTE:
-- at the end give me a clear detail about the fix you did on any segment, (why and where )
-- as the project is so big, do not run the commands like, npm build , npm run serve .... 
-```
+Expected validation behavior:
 
-MENTIION in every fixing case
- - at the end give me a clear detail about the fix you did on any segment, (why and where )
- - as the project is so big, do not run the commands like, npm build , npm run serve .... 
+* When the user clicks “Conferma”:
 
-# -----------
+  * if at least one plot/parcel is selected, continue with the current confirm flow.
+  * if no plot/parcel is selected, stop the confirm flow.
+  * show a clear error/warning message.
+* The message should be handled through the existing project notification/toast/i18n system if available.
+* Avoid hardcoded text if the project uses translations.
 
-I have found out a very seriuas issue
-we alrady have PlotTableComponent, that we usually use for our different features
+Important:
+Do not start coding.
+Do not modify any files.
+Do not create commits.
+Do not run npm, pnpm, yarn, build, lint, or test commands, because the project is very heavy.
+You can only inspect/search/read the code and report your findings.
+If validation commands are needed, only suggest them for the developer to run manually later.
 
+After checking, ask me for any missing information you need, for example:
 
-# -----------
+* screenshot of the plot/parcel selection page
+* expected validation message text
+* whether the message should be toast, inline alert, modal, or field-level message
+* exact route/page where the issue happens
+* whether this validation should apply in all selection flows or only contract plot selection
+* API payload sent when confirming selected plots
+* current behavior when clicking “Conferma” with no selected plots
 
-we have some corrections we should add to the plot-table-component we have used for our plots list AgreementPlotsSelectionModal.
+Expected output:
 
-as you can see in the screenshot attached from qrCodeGenerationTile.vue component, we have a filter embeded with PlotTableComponent.vue that we activate it any where we use PlotTableComponent.vue
-
-Request - 1 > I need this filter to be activated also in out plot-table-component we have impelemented for our plots list in AgreementPlotsSelectionModal.vue
-
-in another screen shot you can see we have use the plot-table-component in src\modules\activities-module\components\steps\PlotSelectionStep.vue line 96.
-here we have a column showing every single plot shape we have in the map
-
-
-Request - 2 > I need you to also activate same exact column for plot-table-component we have impelemented for our plots list in AgreementPlotsSelectionModal.vue
-
-
-in the chat I have attached 
-    - the qrCodeGenerationTile.vue to checkout the Filter implementation
-    - the PlotSelectionStep.vue to checkout the plots shpe column 
-    - the PlotTableComponent.vue to checkout the structure of the component
-
-
-
-Do a very deep, accurate and spread check on every files I have attached and all files releted to them
-analyse the implemetaion of plot-table-component clearly
-
-Then considering the  MANDATORY WORKING RULES update our AgreementPlotsSelectionModal as per Request-1 and Request-2
-
+* Confirm whether the issue exists or not.
+* Explain the current plot/parcel selection and confirmation flow clearly.
+* Explain the technical root cause.
+* Mention the exact files, components, functions, click handlers, selected state variables, store actions, emits, API methods, validation utilities, and translation/toast keys involved.
+* Explain the recommended solution step by step, but without implementing it.
+* Explain where the validation should be added to avoid duplicated logic and to avoid breaking other flows.
+* Explain how to manually test the fix after implementation.
+* Follow the MANDATORY WORKING RULES that I added below this prompt.
 
 
 # MANDATORY WORKING RULES:
-  - Do NOT make extra changes.
-  - Do NOT do unrelated refactors.
-  - Do NOT rename, move, or restructure files unless strictly necessary.
-  - Do NOT introduce new abstractions unless clearly needed for this exact ticket.
-  - Do NOT modify existing working logic unless required by this ticket.
-  - Keep the implementation very minimal.
-  - Keep the implementation descriptive and maintainable.
-  - Keep the implementation fully aligned with the existing logic and patterns already used in this module.
-  - Reuse existing company global/shared components and existing project conventions.
-  - Avoid speculative improvements.
-  - Avoid cleanup changes unrelated to this ticket.
-  - This codebase is huge, so safe integration is more important than clever refactoring.
-  - If you touch a file, only change what is needed for this ticket.
-  - Before coding, first inspect the existing logic and follow the same implementation style already used in nearby files.
-  - If multiple implementation options are possible, choose the one with:
-  - the smallest safe diff
-  - the best consistency with existing code
+
+- Do NOT make extra changes.
+- Do NOT do unrelated refactors.
+- Do NOT rename, move, or restructure files unless strictly necessary.
+- Do NOT introduce new abstractions unless clearly needed for this exact ticket.
+- Do NOT modify existing working logic unless required by this ticket.
+- Keep the implementation very minimal.
+- Keep the implementation descriptive and maintainable.
+- Keep the implementation fully aligned with the existing logic and patterns already used in this module.
+- Reuse existing company global/shared components and existing project conventions.
+- Avoid speculative improvements.
+- Avoid cleanup changes unrelated to this ticket.
+- This codebase is huge, so safe integration is more important than clever refactoring.
+- If you touch a file, only change what is needed for this ticket.
+- Before coding, first inspect the existing logic and follow the same implementation style already used in nearby files.
+- If multiple implementation options are possible, choose the one with:
+- the smallest safe diff
+- the best consistency with existing code
 - the lowest risk in a large legacy codebase
+- Because the project is very heavy, Codex must not run any npm/pnpm/yarn/build/lint/test commands. It can only suggest the validation commands for the developer to run manually later.
+
+# REQUST FOR PROPMP
+so from what you got give me a clear, understandable and accurate prompt to codex to:
+- analyse the code briefly and accuratly
+- to not start code yet
+- on its analyse and solution suggestion, it should consider some points I am attaching with prompt (MANDATORY WORKING RULES)
+- to give me a clear and technical detail about the issue, and the solution(Mentioning the files and functions Involved)
+- I am adding also the 3 screenshot I have already attached here, for more clear detail
+
+---------------------------
+
+
+we have two sliders in our project, one to display the project photos, and one for single product detail to show the image of that product
+first have a very deep study on implementaion and development of these two
+
+I need you to desing and develop a component to be used generally in any case if we want to show any slider
+
+- responsive
+- standard and conventional
+- in the most possible case should use the ShadCN and motion to make it more well designed
+- well designed (moderen, in case of mobile touch control, glassy)
+- large mode photo display
+- taibnails to navigate to next image
+- no arrows for right and left
+- no extra text 
+
+at the end I need you to remove fully the new onle sliders and implement the new one entirly

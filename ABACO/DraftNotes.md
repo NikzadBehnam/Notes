@@ -1136,3 +1136,83 @@ Module:widgets-container-module
     Rilasciato activities-module v2.69.8
     non necessario aggiornamento i18n
     Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/219102
+    BRNACH: feat/219102-planned-activity-plot-selection
+    MODULE: activities-module 
+
+    Rilasciato activities-module v2.69.9
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/219920
+    BRNACH: fix/219920-edit-zero-area-group
+    MODULE: crop-plan-module
+
+    Rilasciato crop-plan-module
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+    
+# https://abacogroup.easyredmine.com/issues/218983
+    BRNACH: fix/218983-update-label
+    MODULE: crop-plan-module
+
+    Rilasciato crop-plan-module v2.51.15
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/221212
+    BRNACH: fix/221212-seed-widget-scleader-selection
+    MODULE: widgets-container-module 
+
+    Rilasciato widgets-container-module v1.22.7
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/219538
+    BRNACH: fix/219538-machinery-update-put
+    MODULE: assets-module
+    
+    Rilasciato assets-module
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/221291
+    BRNACH: feature/221291-beleaf-demetra-visits-integration
+    MODULE: assets-module
+    
+    Rilasciato assets-module
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/221291
+    BRNACH: feature/221291-beleaf-demetra-visits-integration
+    MODULE: assets-module
+    
+    Rilasciato assets-module
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/219215
+    BRNACH: fix/219215-password-reset-url
+    MODULE: sso-web-module
+    
+    Rilasciato sso-web-module v3.8.3
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/221109
+    BRNACH: fix/221109-wms-extralanguage-reference-parcels
+    MODULE: map_web_module
+    
+    Rilasciato map_web_module v2.24.5
+    non necessario aggiornamento i18n
+    Da compilare portal

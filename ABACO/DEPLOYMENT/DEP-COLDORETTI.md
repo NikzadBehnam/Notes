@@ -1,5 +1,5 @@
 # Generatl Deployment Checklist
--[] release v151.0.0 from master
+-[] release v151.0.5 from master
 -[] release the i18n
 -[] release the chart
 
@@ -27,36 +27,36 @@
     - git checkout -b branch/147.0.5-coldiretti master
 
 1. Synchronize Environment
--[+] Fetch latest changes from the remote: `git fetch`
--[+] Pull the latest code: `git pull`
--[] Install dependencies from lock file: `npm ci` 
+- [+] Fetch latest changes from the remote: `git fetch`
+- [+] Pull the latest code: `git pull`
+- [+] Install dependencies from lock file: `npm ci` 
 
 1. Update Dependencies
 
 - [+] Choose update method:
   -[+] Latest Version (`master`):
     -[+] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
-    -[+] Run `npm i` to install updated packages.
+    -[] Run `npm i` to install updated packages.
   - [] Older Version:
     - [] Manually update specific module versions as detailed in the tickets.
     - [] point the local server to proper one, in portal vue.config.js
     - [] Run `npm i` to install updated packages.
 
 1. Local Testing
-  -[+] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
-  -[+] Copy the theme `.scss` file to `src/assets/styles/themes`.
+  -[] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
+  -[] Copy the theme `.scss` file to `src/assets/styles/themes`.
       - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/blob/master/themes/coldiretti-demo.scss?ref_type=heads
-  -[+] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
-  -[+] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
+  -[] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
+  -[] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
   -[] *⚠️ Remove the theme file before committing*.
   -[] Run the linter to check for code quality issues: `npm run lint`.
   -[] Open the portal in a browser and confirm it loads without errors.
 
 
 1. Commit, Push, and Tag
--[+] Commit all changes, "Update packages"
--[+] Push the changes to the remote repository.
--[] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
+- [+] Commit all changes, "Update packages"
+- [+] Push the changes to the remote repository.
+- [+] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
 - [] Create and push a new release tag (e.g., `v1.2.3`).
   - "`npm version patch`" for bugfixes, "`npm version minor`" for features, "`npm version major`"
     - if you were needed to change the tag manually in package.json remember to change it also in package-lock
@@ -76,7 +76,7 @@
 
   New script for generating the backup.zip by Massimiliano Casadei
     - run `npm i` (only for the initial installation of the dependency) and
-    - fetch and pull the master
+  - fetch and pull the master
     -  then execute `npm run release`.
     The script asks some questions, but it's simple: 
 
@@ -145,9 +145,24 @@ OLD way of updatind the backup.zip (NOT WORKING)
   - [] once the dev pipline passed successfully start the test and then finaly the live
 
 
-La pipeline per il portal v150.0.10 partita (Coldiretti)
-https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/175004
+La pipeline per il portal v151.0.7 partita (Coldiretti)
+https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/180534
+
+La pipeline per il i18n-repository v151.0.3
+https://gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/179700
+
 
 Tickets:
-https://abacogroup.easyredmine.com/issues/218590
-https://abacogroup.easyredmine.com/issues/218591
+https://abacogroup.easyredmine.com/issues/219920
+
+
+Gestione contratti di filiera
+
+https://abacogroup.easyredmine.com/issues/216641
+https://abacogroup.easyredmine.com/issues/216643
+https://abacogroup.easyredmine.com/issues/216645
+https://abacogroup.easyredmine.com/issues/216647
+
+
+
+
