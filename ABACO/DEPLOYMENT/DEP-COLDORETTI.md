@@ -21,8 +21,8 @@
 # DEPLOYMENT NEW PORTAL
 1. Branching
 
-- [+] Determine the correct branch:
-  - [+] Latest Version: Working on `master`.
+- [] Determine the correct branch:
+  - [] Latest Version: Working on `master`.
   - [] Older Version: Create a new branch from the specific tag (e.g., `git checkout -b branch/0.1.2-1 v0.1.2`).
     - git checkout -b branch/147.0.5-coldiretti master
 
