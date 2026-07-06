@@ -21,41 +21,41 @@
 # DEPLOYMENT NEW PORTAL
 1. Branching
 
-- [+] Determine the correct branch:
-  - [+] Latest Version: Working on `master`.
+- [] Determine the correct branch:
+  - [] Latest Version: Working on `master`.
   - [] Older Version: Create a new branch from the specific tag (e.g., `git checkout -b branch/0.1.2-1 v0.1.2`).
     - git checkout -b branch/147.0.5-coldiretti master
 
 1. Synchronize Environment
--[+] Fetch latest changes from the remote: `git fetch`
--[+] Pull the latest code: `git pull`
+-[] Fetch latest changes from the remote: `git fetch`
+-[] Pull the latest code: `git pull`
 -[] Install dependencies from lock file: `npm ci` 
 
 1. Update Dependencies
 
-- [+] Choose update method:
-  -[+] Latest Version (`master`):
-    -[+] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
-    -[+] Run `npm i` to install updated packages.
+- [] Choose update method:
+  -[] Latest Version (`master`):
+    -[] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
+    -[] Run `npm i` to install updated packages.
   - [] Older Version:
     - [] Manually update specific module versions as detailed in the tickets.
     - [] point the local server to proper one, in portal vue.config.js
     - [] Run `npm i` to install updated packages.
 
 1. Local Testing
-  -[+] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
-  -[+] Copy the theme `.scss` file to `src/assets/styles/themes`.
+  -[] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
+  -[] Copy the theme `.scss` file to `src/assets/styles/themes`.
       - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/blob/master/themes/coldiretti-demo.scss?ref_type=heads
-  -[+] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
-  -[+] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
+  -[] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
+  -[] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
   -[] *⚠️ Remove the theme file before committing*.
   -[] Run the linter to check for code quality issues: `npm run lint`.
   -[] Open the portal in a browser and confirm it loads without errors.
 
 
 1. Commit, Push, and Tag
--[+] Commit all changes, "Update packages"
--[+] Push the changes to the remote repository.
+-[] Commit all changes, "Update packages"
+-[] Push the changes to the remote repository.
 -[] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
 - [] Create and push a new release tag (e.g., `v1.2.3`).
   - "`npm version patch`" for bugfixes, "`npm version minor`" for features, "`npm version major`"
