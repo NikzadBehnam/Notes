@@ -1,4 +1,3 @@
-
 I need you to analyze the current branch deeply and accurately for this requirement in the Filiere/Supply Chain module.
 
 Requirement:
@@ -8,42 +7,42 @@ If no plot/parcel has been selected, the user must see a clear validation messag
 
 Business rule:
 
-* The user cannot confirm the plot/parcel selection with an empty selection.
-* At least one plot/parcel must be selected before proceeding.
-* If the selected plots list is empty, show a clear message to the user.
-* The confirmation/save/navigation flow must be blocked until at least one plot/parcel is selected.
+- The user cannot confirm the plot/parcel selection with an empty selection.
+- At least one plot/parcel must be selected before proceeding.
+- If the selected plots list is empty, show a clear message to the user.
+- The confirmation/save/navigation flow must be blocked until at least one plot/parcel is selected.
 
 Your task:
 
-* Analyze the code clearly and segment by segment.
-* Check the plot/parcel selection page used in the contract/Filiere flow.
-* Identify the “Conferma” button and its click handler.
-* Check where selected plots/parcels are stored.
-* Check whether the selected plots are managed by local state, props, Vuex/store, route params, or API response.
-* Check whether the page already has validation logic before confirming.
-* Check whether the same selection page is used in different modes, for example:
+- Analyze the code clearly and segment by segment.
+- Check the plot/parcel selection page used in the contract/Filiere flow.
+- Identify the “Conferma” button and its click handler.
+- Check where selected plots/parcels are stored.
+- Check whether the selected plots are managed by local state, props, Vuex/store, route params, or API response.
+- Check whether the page already has validation logic before confirming.
+- Check whether the same selection page is used in different modes, for example:
+  - create mode
+  - edit mode
+  - read-only mode
+  - view-only mode
 
-  * create mode
-  * edit mode
-  * read-only mode
-  * view-only mode
-* Check whether this validation should apply only when the user is actively adding/selecting plots, and not in read-only mode.
-* Check whether selected plots can come from:
+- Check whether this validation should apply only when the user is actively adding/selecting plots, and not in read-only mode.
+- Check whether selected plots can come from:
+  - table selection
+  - map selection
+  - preloaded existing contract plots
 
-  * table selection
-  * map selection
-  * preloaded existing contract plots
-* Confirm whether the requirement is currently missing or partially implemented in the branch.
+- Confirm whether the requirement is currently missing or partially implemented in the branch.
 
 Expected validation behavior:
 
-* When the user clicks “Conferma”:
+- When the user clicks “Conferma”:
+  - if at least one plot/parcel is selected, continue with the current confirm flow.
+  - if no plot/parcel is selected, stop the confirm flow.
+  - show a clear error/warning message.
 
-  * if at least one plot/parcel is selected, continue with the current confirm flow.
-  * if no plot/parcel is selected, stop the confirm flow.
-  * show a clear error/warning message.
-* The message should be handled through the existing project notification/toast/i18n system if available.
-* Avoid hardcoded text if the project uses translations.
+- The message should be handled through the existing project notification/toast/i18n system if available.
+- Avoid hardcoded text if the project uses translations.
 
 Important:
 Do not start coding.
@@ -55,25 +54,24 @@ If validation commands are needed, only suggest them for the developer to run ma
 
 After checking, ask me for any missing information you need, for example:
 
-* screenshot of the plot/parcel selection page
-* expected validation message text
-* whether the message should be toast, inline alert, modal, or field-level message
-* exact route/page where the issue happens
-* whether this validation should apply in all selection flows or only contract plot selection
-* API payload sent when confirming selected plots
-* current behavior when clicking “Conferma” with no selected plots
+- screenshot of the plot/parcel selection page
+- expected validation message text
+- whether the message should be toast, inline alert, modal, or field-level message
+- exact route/page where the issue happens
+- whether this validation should apply in all selection flows or only contract plot selection
+- API payload sent when confirming selected plots
+- current behavior when clicking “Conferma” with no selected plots
 
 Expected output:
 
-* Confirm whether the issue exists or not.
-* Explain the current plot/parcel selection and confirmation flow clearly.
-* Explain the technical root cause.
-* Mention the exact files, components, functions, click handlers, selected state variables, store actions, emits, API methods, validation utilities, and translation/toast keys involved.
-* Explain the recommended solution step by step, but without implementing it.
-* Explain where the validation should be added to avoid duplicated logic and to avoid breaking other flows.
-* Explain how to manually test the fix after implementation.
-* Follow the MANDATORY WORKING RULES that I added below this prompt.
-
+- Confirm whether the issue exists or not.
+- Explain the current plot/parcel selection and confirmation flow clearly.
+- Explain the technical root cause.
+- Mention the exact files, components, functions, click handlers, selected state variables, store actions, emits, API methods, validation utilities, and translation/toast keys involved.
+- Explain the recommended solution step by step, but without implementing it.
+- Explain where the validation should be added to avoid duplicated logic and to avoid breaking other flows.
+- Explain how to manually test the fix after implementation.
+- Follow the MANDATORY WORKING RULES that I added below this prompt.
 
 # MANDATORY WORKING RULES:
 
@@ -98,28 +96,13 @@ Expected output:
 - Because the project is very heavy, Codex must not run any npm/pnpm/yarn/build/lint/test commands. It can only suggest the validation commands for the developer to run manually later.
 
 # REQUST FOR PROPMP
+
 so from what you got give me a clear, understandable and accurate prompt to codex to:
+
 - analyse the code briefly and accuratly
 - to not start code yet
 - on its analyse and solution suggestion, it should consider some points I am attaching with prompt (MANDATORY WORKING RULES)
 - to give me a clear and technical detail about the issue, and the solution(Mentioning the files and functions Involved)
 - I am adding also the 3 screenshot I have already attached here, for more clear detail
 
----------------------------
-
-
-we have two sliders in our project, one to display the project photos, and one for single product detail to show the image of that product
-first have a very deep study on implementaion and development of these two
-
-I need you to desing and develop a component to be used generally in any case if we want to show any slider
-
-- responsive
-- standard and conventional
-- in the most possible case should use the ShadCN and motion to make it more well designed
-- well designed (moderen, in case of mobile touch control, glassy)
-- large mode photo display
-- taibnails to navigate to next image
-- no arrows for right and left
-- no extra text 
-
-at the end I need you to remove fully the new onle sliders and implement the new one entirly
+---
