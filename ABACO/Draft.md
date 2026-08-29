@@ -1,750 +1,740 @@
-# Technical Analysis Request — Ticket #222058
+# Catasto Massivo / Import Catasto — Frontend Technical Analysis
 
-## Related tickets
+## Objective
 
-* **FE ticket to implement:** `#222058 - Sviluppo FE - Blocco modifica/cancellazione ruolo lavoratore se adoperato in attività #45`
-* **Parent/backend ticket:** `#221331 - Blocco modifica/cancellazione ruolo lavoratore se adoperato in attività #45`
+I need you to perform a **deep technical analysis of the current repository and all relevant installed/interdependent modules** in order to determine exactly **where this new frontend feature belongs and which modules/files are involved**.
 
-I will attach the PDF versions of both tickets to this prompt.
+**Do not implement or modify any code yet.**
 
-The parent ticket contains the business requirements, backend analysis, validation rules, and validation endpoints. Ticket `#222058` is the front-end subtask that must integrate those backend validations into the relevant existing FE flows.
+This is an **analysis and implementation-planning phase only**.
+
+I will review your findings, involved modules/files, and proposed implementation approach before we start coding.
 
 ---
 
-# Current phase: analysis only
+# Important Project Context
 
-We are currently in the **technical analysis and solution-design phase**.
+This application is divided into multiple frontend/modules/packages.
 
-## Strict restrictions
+Some modules are installed as dependencies inside other modules and functionality is often distributed across them.
 
-You must not:
+Therefore, the **most important part of this analysis is NOT to assume that the current repository is the correct place for the whole implementation**.
 
-* write implementation code;
-* edit, create, delete, rename, or format any file;
-* apply patches;
-* update dependencies;
-* modify lockfiles;
-* create commits;
-* start the implementation;
-* refactor unrelated code;
-* make speculative changes.
+You must inspect:
 
-Keep the repository completely unchanged.
+* the current module/repository;
+* its installed ABACO/internal modules;
+* relevant package dependencies;
+* route ownership;
+* menu/navigation integration;
+* shared components;
+* API/service layers;
+* existing Back Office features;
+* existing municipality-selection logic;
+* authentication/competency handling;
+* polling implementations;
+* any other dependent module involved in this workflow.
 
-You may inspect the repository, search files, trace imports, inspect dependency implementations, and run only safe read-only commands.
+The goal is to determine **exactly which module owns each responsibility** before proposing changes.
 
-Before finishing, verify that the Git working tree is still unchanged.
+---
+
+# Additional Update from Simone
+
+Simone has informed me that he has already created the new menu entry in **Coldiretti DEV**.
+
+The menu entry is currently named:
+
+```text
+import-catasto
+```
+
+Consider this an important piece of information during the analysis.
+
+Do **not** automatically create another menu entry in code.
+
+Instead, investigate what the existing Coldiretti DEV menu configuration means technically.
+
+Determine whether:
+
+* the menu entry is externally/configuration-driven;
+* it already points to a route expected from one of our frontend modules;
+* the current repository must only provide the corresponding route/page;
+* additional local route registration is required;
+* some installed module owns the navigation/router configuration;
+* or any other integration is necessary.
+
+Clearly explain your conclusion.
+
+---
+
+# Functional Requirement
+
+I will attach the latest analysis/specification note for this ticket.
+
+Treat that document as the primary functional reference.
+
+The frontend functionality currently required is approximately:
+
+```text
+BACK OFFICE
+    ↓
+import-catasto
+    ↓
+Open dedicated page
+    ↓
+Search/select Comune
+    ↓
+Start cadastral bulk import
+    ↓
+Receive importId
+    ↓
+Poll import progress
+    ↓
+Display import progress/results
+```
+
+The final `requestId` / WFS/intersection-processing phase is **NOT currently part of the implementation scope** because Simone is still defining that part.
+
+Do not design or implement speculative `requestId` behaviour.
+
+---
+
+# Current Frontend Scope
+
+Based on the attached analysis note, the current frontend needs to support the following.
+
+## 1. Page integration
+
+A dedicated Back Office page for the cadastral bulk-import feature.
+
+No additional filters are required in the standard yellow toolbar.
+
+Determine:
+
+* which module should contain this page;
+* how comparable Back Office pages are registered;
+* which router/module owns the route;
+* how the externally created `import-catasto` menu entry should resolve to this page.
+
+---
+
+## 2. Competency / authorization
+
+The feature is associated with the competency/module:
+
+```text
+CATASTO_BATCH
+```
+
+Investigate the existing competency/authorization conventions.
+
+Determine whether frontend changes are actually required for this competency or whether menu visibility is already fully handled externally.
+
+Reference existing similar Back Office features and their exact implementation patterns.
+
+---
+
+## 3. Comune selection
+
+We must reuse the same searchable Comune-selection behaviour already used when inserting/creating an **appezzamento**.
+
+Do not propose a new custom selector unless the architecture absolutely requires it.
+
+Find the exact existing implementation:
+
+* module;
+* component;
+* service/API layer;
+* model/type;
+* autocomplete component;
+* relevant functions/computed properties/watchers;
+* any shared `abc-*` components involved.
+
+The Comune API request for this feature must include:
+
+```text
+administrative_tree=true
+```
+
+because this makes the API return the additional fields:
+
+```text
+cadastral_dataset
+province_code
+```
+
+Together with:
+
+```text
+council_code
+```
+
+these values are required to start the import.
+
+Determine the cleanest standard way to reuse or extend the existing Comune-selection implementation without duplicating logic.
+
+---
+
+## 4. Start bulk cadastral import
+
+After selecting a Comune, the frontend calls:
+
+```http
+PUT /api/v1/aggiornacatasto/regione/{regione}/provincia/{provincia}/comune/{comune}
+```
+
+The mapping must be:
+
+```text
+{regione}   -> selectedComune.cadastral_dataset
+{provincia} -> selectedComune.province_code
+{comune}    -> selectedComune.council_code
+```
+
+Example:
+
+```text
+cadastral_dataset = VENETO
+province_code      = PD
+council_code       = A001
+```
+
+becomes:
+
+```http
+PUT /api/v1/aggiornacatasto/regione/VENETO/provincia/PD/comune/A001
+```
+
+Expected success response:
+
+```json
+{
+  "importId": 15
+}
+```
+
+Investigate where this API call should live according to the current application architecture.
+
+Do not simply add HTTP calls directly inside the page if existing project conventions use:
+
+* API clients;
+* repositories;
+* services;
+* composables;
+* stores;
+* shared HTTP wrappers;
+* module-specific API classes;
+* or another established pattern.
+
+Find and reference the correct existing convention.
+
+---
+
+## 5. Import progress polling
+
+After receiving the `importId`, the frontend must periodically call:
+
+```http
+GET /api/v1/aggiornacatasto/progress/import/{importId}
+```
+
+Example response:
+
+```json
+{
+  "importId": 15,
+  "reqId": 5,
+  "codComune": "L087",
+  "fogliTotali": 10,
+  "fogliElaborati": 10,
+  "fogliScartati": 0,
+  "particelleTotali": 2487,
+  "particelleElaborate": 2487,
+  "particelleScartate": 0,
+  "errorLog": null
+}
+```
+
+The polling interval is still to be decided.
+
+Search the codebase and installed modules for existing polling implementations.
+
+Pay particular attention to established conventions for:
+
+* timers;
+* API polling;
+* stopping polling;
+* component cleanup/unmount/destroy;
+* navigation away from the page;
+* request errors;
+* retry behaviour;
+* avoiding duplicate timers;
+* avoiding concurrent duplicate polling requests.
+
+Recommend the implementation that best follows existing project conventions.
+
+---
+
+## 6. Progress presentation
+
+The frontend must display the useful progress information returned by the API.
+
+At minimum, consider:
+
+```text
+fogliTotali
+fogliElaborati
+fogliScartati
+
+particelleTotali
+particelleElaborate
+particelleScartate
+
+errorLog
+```
+
+The specification intentionally leaves the presentation approach to the frontend.
+
+Before suggesting a new UI, inspect the project for existing conventional/shared UI components.
+
+In particular, investigate whether we already have appropriate:
+
+```text
+abc-*
+```
+
+components for things such as:
+
+* cards;
+* progress indicators;
+* alerts;
+* loading states;
+* error messages;
+* buttons;
+* autocomplete;
+* information rows;
+* status indicators;
+* empty states;
+* notifications.
+
+Prefer existing standard components and visual patterns over introducing custom implementations.
+
+If progress bars are appropriate, explain whether the existing API provides enough information to calculate them safely.
+
+Do **not** invent an unsupported single overall progress percentage if no business rule exists for combining cadastral sheets and parcels.
+
+---
+
+# Backend Validation Behaviour
+
+The PUT API will eventually perform backend checks such as:
+
+* preventing another import for the same Comune while one is already running;
+* limiting the maximum number of simultaneous imports.
+
+These validations belong to the backend.
+
+For the frontend, analyze only:
+
+* how API errors are conventionally handled;
+* where they should be surfaced;
+* whether the API's returned error message can be displayed directly;
+* whether an existing notification/error component should be used.
+
+Do not move backend validation logic into the frontend.
+
+---
+
+# Explicitly Out of Scope for Now
+
+The following part must **NOT be implemented or fully designed yet**:
+
+```text
+reqId
+    ↓
+intersection calculation
+    ↓
+WFS polling
+    ↓
+intersection result
+```
+
+The progress API currently returns `reqId`, but Simone has explicitly said that he still needs to define how that final phase should work.
+
+Therefore:
+
+* acknowledge `reqId` in the response model if technically necessary;
+* do not invent an endpoint;
+* do not invent polling behaviour;
+* do not implement intersection processing;
+* do not create speculative UI for it.
+
+Leave this part for a later phase.
+
+---
+
+# MOST IMPORTANT ANALYSIS — MODULE OWNERSHIP
+
+Because this project is split across installed modules, I need a very thorough module-level analysis.
+
+Do not assume the current module owns everything.
+
+Trace the feature across the actual dependency architecture.
+
+For every major responsibility, determine the owner:
+
+| Responsibility                               | Module / package to determine |
+| -------------------------------------------- | ----------------------------- |
+| `import-catasto` menu/navigation integration | ?                             |
+| Route registration                           | ?                             |
+| Back Office page                             | ?                             |
+| Competency handling                          | ?                             |
+| Comune autocomplete                          | ?                             |
+| Comune API service                           | ?                             |
+| Shared `abc-*` UI components                 | ?                             |
+| HTTP client/API layer                        | ?                             |
+| Bulk import API                              | ?                             |
+| Progress polling                             | ?                             |
+| Notifications/errors                         | ?                             |
+
+Inspect relevant:
+
+```text
+package.json
+lock files
+workspace configuration
+module aliases
+internal package imports
+installed ABACO dependencies
+router definitions
+menu/navigation integrations
+shared libraries
+API/service folders
+```
+
+If an installed dependency contains the actual implementation source relevant to this feature, inspect it as well.
+
+I specifically want to avoid implementing something in the current module that properly belongs to another ABACO module.
+
+---
+
+# Existing Conventions Are Mandatory
+
+This project already contains established architecture and reusable components.
+
+Before proposing any new abstraction, identify whether an existing solution already exists.
+
+Search specifically for similar implementations involving:
+
+* Back Office pages;
+* external/configuration-driven menu entries;
+* competency-controlled pages;
+* Comune autocomplete;
+* `dictionary_councils`;
+* `administrative_tree`;
+* `abc-*` components;
+* async actions;
+* long-running operations;
+* polling;
+* progress displays;
+* API error handling;
+* page lifecycle cleanup.
+
+Reuse established conventions whenever possible.
+
+Do not suggest introducing a new generic component, helper, service, composable, store, or abstraction unless there is a concrete architectural reason and no suitable existing solution.
+
+---
+
+# MANDATORY: No Code Changes
+
+At this stage:
+
+**DO NOT implement anything.**
+
+Do not:
+
+* create files;
+* edit files;
+* delete files;
+* refactor code;
+* change configuration;
+* install/update dependencies;
+* change package versions;
+* automatically format files;
+* create routes;
+* create components;
+* add services;
+* create tests.
+
+Only inspect and analyze.
+
+---
+
+# Expected Output
+
+Provide the analysis in the following structure.
+
+## 1. Executive Technical Summary
+
+Explain:
+
+* how this feature fits into the current architecture;
+* which module should own the page;
+* which other modules are involved;
+* whether Simone's existing `import-catasto` menu entry requires any additional frontend menu configuration.
+
+---
+
+## 2. Module Dependency / Ownership Map
+
+Provide a clear map such as:
+
+```text
+Module A
+  └─ responsibility...
+
+Module B
+  └─ responsibility...
+
+Shared Module C
+  └─ reusable components...
+
+Current repository
+  └─ exact responsibility...
+```
+
+Explain why each responsibility belongs there.
+
+---
+
+## 3. Existing Implementations to Reuse
+
+List the relevant existing implementations you found.
+
+For each one provide:
+
+```text
+Module/package
+File path
+Component/class/function
+What it currently does
+Why it is relevant
+How it should be reused
+```
+
+Pay special attention to the existing appezzamento Comune selector.
+
+---
+
+## 4. Exact Files Potentially Involved
+
+Separate them by module.
+
+Example:
+
+```text
+Current module
+- path/to/file.vue
+  - reason
+
+Installed module X
+- path/to/service.ts
+  - reason
+
+Shared module Y
+- path/to/component.vue
+  - reason
+```
+
+Clearly distinguish between:
+
+* files that definitely require modification;
+* files that probably require modification;
+* files that only need to be referenced/reused;
+* files inspected but which should remain unchanged.
+
+---
+
+## 5. Proposed Frontend Architecture
+
+Describe the recommended technical flow.
+
+For example:
+
+```text
+External menu `import-catasto`
+        ↓
+route
+        ↓
+Catasto Massivo page
+        ↓
+existing Comune autocomplete
+        ↓
+dictionary_councils
++ administrative_tree=true
+        ↓
+selected Comune
+        ↓
+PUT import API
+        ↓
+importId
+        ↓
+poll progress API
+        ↓
+update conventional progress UI
+```
+
+Explain the exact responsibilities at each level.
+
+---
+
+## 6. Page State / Lifecycle
+
+Describe the recommended states, for example:
+
+```text
+initial
+↓
+Comune selected
+↓
+starting import
+↓
+import running
+↓
+progress updates
+↓
+completed / error
+```
+
+Explain:
+
+* button state;
+* loading state;
+* polling start;
+* polling stop;
+* error handling;
+* component destruction/navigation cleanup.
+
+Do not write implementation code.
+
+---
+
+## 7. API Integration Plan
+
+For each API involved, specify:
+
+* method;
+* URL;
+* parameters;
+* response model;
+* existing service/client that should handle it;
+* any types/models that may need to be extended.
+
+Explicitly verify the mapping:
+
+```text
+cadastral_dataset -> regione
+province_code      -> provincia
+council_code       -> comune
+```
+
+---
+
+## 8. UI / Reusable Component Recommendation
+
+Identify exactly which existing `abc-*` or project-standard components should be reused.
+
+Recommend the simplest conventional UI for:
+
+* Comune selection;
+* start action;
+* loading;
+* fogli progress;
+* particelle progress;
+* discarded counts;
+* `errorLog`;
+* success/error status.
+
+Do not redesign established project patterns unnecessarily.
+
+---
+
+## 9. Risks / Open Questions
+
+List only genuine unresolved items.
+
+For example:
+
+* polling interval still undefined;
+* final menu display label may still need confirmation;
+* exact error response contract may need confirmation;
+* `reqId` workflow intentionally postponed.
+
+Clearly distinguish blockers from non-blocking open decisions.
+
+---
+
+## 10. Recommended Implementation Sequence
+
+Give me an ordered implementation plan, but **do not execute it**.
+
+For example:
+
+```text
+Step 1 — ...
+Step 2 — ...
+Step 3 — ...
+```
+
+The sequence must respect module ownership and minimize unnecessary changes.
+
+---
+
+# Important Analysis Standard
+
+Do not give me generic Vue/frontend advice.
+
+I need conclusions grounded in the **actual repository and installed module architecture**.
+
+Every important conclusion should reference concrete:
+
+* modules;
+* package names;
+* file paths;
+* components;
+* functions;
+* routes;
+* API services;
+* existing patterns.
+
+If something cannot be confirmed from the codebase, explicitly mark it as:
+
+```text
+Not confirmed
+```
+
+rather than guessing.
+
+---
+
+# Attached Material
+
+I will attach:
+
+1. the latest Catasto Massivo analysis/specification note;
+2. the relevant Simone communication/context if needed.
+
+Use the latest analysis note as the functional source of truth and reconcile it with the actual codebase.
 
 ---
 
 # MANDATORY WORKING RULES
 
-The following rules are mandatory and must govern both your analysis and your suggested implementation.
+The following rules are mandatory and must govern **all analysis and all implementation recommendations**.
 
-Do not treat them as optional recommendations.
-
-```text
-[PASTE THE MANDATORY WORKING RULES HERE]
-```
-
-Your final solution proposal must explicitly explain how it complies with these rules.
-
-If any possible solution conflicts with one of the mandatory rules, reject that approach and propose a compliant alternative.
-
----
-
-# Business problem
-
-A worker may have one or more roles, and each role has a validity period.
-
-Activities may reference a worker on a specific planned or execution date.
-
-The system must prevent operations that would leave an activity associated with a worker who does not have any valid role on that activity date.
-
-The relevant operations are:
-
-1. Modifying the date of a planned activity.
-2. Modifying the date of an executed activity.
-3. Modifying the validity dates of a worker role.
-4. Deleting a worker role.
-
-The frontend must not reproduce the backend validity calculation locally.
-
-Instead, before executing the real update or deletion, the frontend must call the relevant backend validation endpoint.
-
----
-
-# Backend validation contract
-
-According to the parent ticket, the backend validation APIs follow this rule:
-
-* An empty array means that the requested operation is valid and the frontend may continue.
-* A non-empty array contains blocking anomalies, so the frontend must stop the operation.
-* If the validation request fails technically, the frontend must not bypass validation and continue with the actual update or deletion.
-
-In simplified form:
-
-```text
-Validation response: []
-→ Continue with the existing update/delete request.
-
-Validation response: [one or more anomalies]
-→ Block the operation and show the appropriate error or anomaly information.
-
-Validation request fails
-→ Block the operation and use the standard API error-handling flow.
-```
-
----
-
-# Backend endpoints described in ticket #221331
-
-## 1. Validate modification of an executed activity
-
-```http
-PUT /api/v1/plots/subjects/{subjectId}/{campaign}/actions/{executionId}/validate
-```
-
-The request body must be equivalent to the body used by the existing executed-activity update request.
-
-The related real update endpoint described in the ticket is:
-
-```http
-POST /sitiagri-rest-api/api_sso/v1/plots/subjects/{subjectId}/{campaign}/actions/{executionId}
-```
-
-You must verify the actual endpoint, HTTP method, API wrapper, and payload currently used by this repository rather than assuming that the ticket examples exactly match the current FE implementation.
-
----
-
-## 2. Validate modification of a planned activity
-
-```http
-PUT /api/v1/plots/subjects/{subjectId}/{campaign}/activities/{activityId}/validate
-```
-
-The request body must be equivalent to the body used by the existing planned-activity update request.
-
-The related real update endpoint described in the ticket is:
-
-```http
-POST /sitiagri-rest-api/api_sso/v1/plots/subjects/{subjectId}/{campaign}/activities/{actionId}
-```
-
-Verify the real parameter naming, current HTTP method, payload structure, and existing service implementation.
-
----
-
-## 3. Validate modification of worker-role validity dates
-
-```http
-PUT /api/v1/plots/subjects/{companySubjectId}/workers/{workerSubjectId}/role/{roleId}/validate
-```
-
-Example body from the ticket:
-
-```json
-{
-  "start_date": 1772146802000,
-  "end_date": 1784325599000
-}
-```
-
-Verify:
-
-* the real route prefix;
-* how the company subject ID is obtained;
-* how the worker subject ID is obtained;
-* whether `roleId` corresponds to `pkIdRelazione`, a role ID, or another relation identifier;
-* the date format used by the existing update flow;
-* whether null or open-ended dates are supported;
-* whether timestamps are milliseconds;
-* the actual response type.
-
----
-
-## 4. Validate deletion of a worker role
-
-```http
-GET /api/v1/plots/subjects/{companySubjectId}/workers/{workerSubjectId}/role/{roleId}/validate
-```
-
-This validation must happen before the real worker-role deletion request.
-
-The parent ticket also references existing worker relation operations similar to:
-
-```http
-PUT /sitiagri-rest-api/api_sso/v1/workers/{subjectId}/involved/{pkIdRelazione}
-```
-
-```http
-DELETE /sitiagri-rest-api/api_sso/v1/workers/{subjectId}/involved/{pkIdRelazione}
-```
-
-Do not assume that these are the exact endpoints currently used by the frontend. Trace and confirm the real implementation.
-
----
-
-# Required repository analysis
-
-Perform a deep analysis of the current repository.
-
-The affected features may exist in different modules, shared libraries, or installed ABACO dependencies. Do not stop after finding the first matching component.
-
-## 1. Planned-activity modification flow
-
-Trace the complete current flow for editing a planned activity.
-
-Identify:
-
-* the route, page, tile, modal, drawer, or form where the operation starts;
-* the form component;
-* the save or submit handler;
-* validation performed before submission;
-* payload construction;
-* API service or repository function;
-* stores, actions, composables, mixins, decorators, or event-bus handlers involved;
-* loading-state handling;
-* success handling;
-* API error handling;
-* modal-closing behavior;
-* data refresh after a successful update;
-* whether the activity date change is detectable before saving;
-* whether workers are present directly in the payload or resolved elsewhere.
-
-Confirm the exact files, classes, methods, functions, and relevant line ranges.
-
----
-
-## 2. Executed-activity modification flow
-
-Trace the complete current flow for editing an executed activity.
-
-Identify the same areas:
-
-* UI entry point;
-* form or dialog;
-* submit handler;
-* payload creation;
-* current API call;
-* API abstractions;
-* state management;
-* loading and error flows;
-* post-update refresh;
-* differences between planned and executed activities;
-* any shared code between the two flows.
-
-Determine whether planned and executed activity edits use:
-
-* separate modules;
-* shared components;
-* shared standard-form definitions;
-* configuration-driven forms;
-* ABACO package implementations.
-
----
-
-## 3. Worker-role modification flow
-
-Trace the complete flow used to edit a worker role or its validity dates.
-
-Identify:
-
-* where workers and roles are displayed;
-* the edit action;
-* the form or modal;
-* how the existing role/relation is represented;
-* how `subjectId`, worker ID, relation ID, role ID, company ID, and dates are obtained;
-* the submit handler;
-* the current update API;
-* API client or dependency responsible for the request;
-* date conversion and serialization;
-* success/error notifications;
-* refresh behavior;
-* whether multi-role workers are handled differently.
-
-Confirm whether the frontend edits:
-
-* the role itself;
-* a worker-company relation;
-* an `anag_relazioni` record;
-* a role assigned through another model.
-
-Do not infer this only from the ticket terminology. Confirm it from the code.
-
----
-
-## 4. Worker-role deletion flow
-
-Trace the complete worker-role deletion process.
-
-Identify:
-
-* the delete button or action menu;
-* permission conditions;
-* confirmation dialog;
-* delete handler;
-* current API call;
-* ID values passed to the API;
-* success/error behavior;
-* list refresh;
-* whether deleting a role and deleting a worker are different operations;
-* whether the current UI can delete one role from a multi-role worker;
-* whether deletion logic is implemented in this repository or an ABACO dependency.
-
-The requested validation concerns deletion of a worker role. Confirm that the located frontend flow corresponds to that exact operation.
-
----
-
-# Deep analysis of ABACO dependencies
-
-The target implementation may not be fully contained in the application repository.
-
-Inspect the relevant ABACO dependencies used by the discovered modules.
-
-This includes, where relevant:
-
-* `package.json`;
-* lockfiles;
-* workspace configuration;
-* local packages;
-* linked packages;
-* `@abaco/*` dependencies;
-* standard forms packages;
-* worker registry packages;
-* activities packages;
-* API packages;
-* shared UI or domain modules;
-* TypeScript declarations;
-* distributed JavaScript;
-* source maps;
-* exported services and types.
-
-For each relevant dependency, determine:
-
-1. The installed package name and version.
-2. Which application file imports it.
-3. Which exported component, service, type, or function is involved.
-4. Whether the affected behavior is implemented:
-
-   * directly in this repository;
-   * inside an ABACO dependency;
-   * partly in both.
-5. Whether the proper fix should be:
-
-   * an application-level integration;
-   * a change in an ABACO package;
-   * an extension point or callback supplied by the application;
-   * a dependency upgrade after a package-level change.
-6. Whether the dependency already exposes a validation hook, pre-submit callback, request interceptor, API service, or reusable utility that should be used.
-
-Do not propose directly modifying compiled files inside `node_modules`.
-
-If a required change belongs to an ABACO dependency, identify the source package that should own the change and explain how the current application would consume the corrected package version.
-
----
-
-# Questions the analysis must answer
-
-## Validation placement
-
-For each of the four operations, determine the exact safest point at which the `/validate` call should be inserted.
-
-The validation should normally occur:
-
-```text
-After local form validation and final payload creation
-→ Before the real update/delete API call
-→ Before closing the form or resetting its state
-```
-
-Confirm whether this sequence fits the current code architecture.
-
----
-
-## Payload reuse
-
-Determine how to guarantee that activity validation receives the same effective payload as the real update request.
-
-Avoid constructing two independent payloads that may become inconsistent.
-
-Prefer, where compatible with the mandatory rules:
-
-1. Build the final request payload once.
-2. Send it to the validation endpoint.
-3. If the response is empty, send the same payload to the real endpoint.
-
-Explain how this can be implemented using the current functions and abstractions.
-
----
-
-## Validation response handling
-
-Find whether the repository already has:
-
-* a common anomaly model;
-* validation-error utilities;
-* standard business-error dialogs;
-* APIs that return arrays of blocking conditions;
-* reusable notification components;
-* standard forms error handling;
-* translations for similar blocking messages.
-
-Determine whether anomalies should be:
-
-* displayed individually;
-* transformed into a generic blocking message;
-* passed to an existing error component;
-* handled by a standard backend error mapper.
-
-Do not invent an anomaly response structure that is not documented or visible in existing code.
-
----
-
-## Date handling
-
-Inspect how dates are represented throughout all four flows.
-
-Confirm:
-
-* form date type;
-* timezone handling;
-* conversion utilities;
-* Unix seconds versus milliseconds;
-* start-of-day/end-of-day normalization;
-* nullable dates;
-* inclusive/exclusive validity boundaries;
-* whether the validation payload can reuse the exact serialized values from the real request.
-
-Highlight any potential timezone or date-normalization risk.
-
----
-
-## Loading and duplicate submissions
-
-Determine how the UI currently prevents repeated submissions.
-
-The suggested solution must ensure that:
-
-* the validation and actual operation behave as one user action;
-* loading remains active across both requests;
-* the user cannot submit again between validation and update;
-* the form does not close after validation alone;
-* success is shown only after the real operation succeeds;
-* loading is reset correctly after validation anomalies or API failures.
-
----
-
-## Error behavior
-
-The implementation must be fail-safe.
-
-Confirm how the existing code should behave when:
-
-* validation returns an empty array;
-* validation returns anomalies;
-* validation returns null or an unexpected response;
-* validation returns an HTTP business error;
-* validation fails due to a network/server error;
-* validation succeeds but the real update/delete fails.
-
-The real operation must not execute when validation has not clearly succeeded.
-
----
-
-## Scope of activity validation
-
-The ticket mainly refers to activity-date changes.
-
-Investigate whether the frontend can reliably determine that only the date changed.
-
-Then recommend, with justification, whether validation should run:
-
-* only when the relevant activity date changes; or
-* before every update of an existing planned/executed activity.
-
-Base this recommendation on:
-
-* the backend contract;
-* the current payload;
-* code complexity;
-* the risk of bypassing validation;
-* the mandatory working rules.
-
-Clearly label this as either a confirmed requirement or a recommended implementation decision.
-
----
-
-# Required final output
-
-Do not provide code or patches.
-
-Provide a detailed technical analysis using the following structure.
-
-## 1. Executive summary
-
-Explain:
-
-* the confirmed issue;
-* why the FE change is required;
-* the four affected operations;
-* where the main implementation appears to belong.
-
----
-
-## 2. Confirmed business rules
-
-Describe the rules supported by the attached tickets.
-
-Clearly distinguish between:
-
-* ticket-confirmed requirements;
-* conclusions confirmed from the repository;
-* assumptions;
-* open questions.
-
----
-
-## 3. Current implementation map
-
-Provide a table with columns similar to:
-
-| Operation                | UI entry file | Submit function | API/service function | Dependency/package | Current endpoint |
-| ------------------------ | ------------- | --------------- | -------------------- | ------------------ | ---------------- |
-| Planned activity update  | ...           | ...             | ...                  | ...                | ...              |
-| Executed activity update | ...           | ...             | ...                  | ...                | ...              |
-| Worker-role update       | ...           | ...             | ...                  | ...                | ...              |
-| Worker-role deletion     | ...           | ...             | ...                  | ...                | ...              |
-
-Include exact file paths, symbols, and relevant line numbers.
-
----
-
-## 4. Detailed current flow per operation
-
-For each operation, explain the complete flow from user action to API response.
-
-Reference:
-
-* exact files;
-* components/classes;
-* methods/functions;
-* stores/services;
-* dependency code;
-* payload builders;
-* success and error handlers.
-
----
-
-## 5. Exact technical gap
-
-Explain precisely what is currently missing.
-
-For example:
-
-* which handler directly calls the real update/delete API;
-* where no backend validation is currently performed;
-* whether a suitable service method is missing;
-* whether the API belongs in the application or an ABACO dependency;
-* whether the same payload can already be reused;
-* which existing error-handling mechanism can support anomalies.
-
-Do not give only a generic description.
-
----
-
-## 6. Ownership and affected-file assessment
-
-Separate files into:
-
-### Files confirmed to require modification
-
-For every file, explain:
-
-* why it must change;
-* which function or section is involved;
-* what responsibility should be added or adjusted.
-
-### Files that may require modification
-
-Explain what confirmation is still needed.
-
-### ABACO dependency changes
-
-For each dependency-level change, explain:
-
-* package name and installed version;
-* owning source package;
-* required exported API or behavior;
-* how this repository would consume the new version.
-
-### Files inspected but not expected to change
-
-Include important files that helped confirm the flow but should remain unchanged.
-
----
-
-## 7. Recommended solution design
-
-Provide a step-by-step implementation plan without writing the code.
-
-For every operation, describe:
-
-1. Where the validation service method should live.
-2. What parameters it should receive.
-3. How endpoint IDs should be resolved.
-4. How the final payload should be created and reused.
-5. Where validation should be called.
-6. How an empty array should be handled.
-7. How anomalies should be handled.
-8. How validation failures should be handled.
-9. When the existing update/delete request should execute.
-10. How loading, modal state, notifications, and refresh should behave.
-
----
-
-## 8. Suggested API/service signatures
-
-Do not implement them, but describe the recommended responsibilities and inputs/outputs for the required service methods.
-
-For example, describe conceptually whether methods similar to these are needed:
-
-```text
-validatePlannedActivityUpdate(...)
-validateExecutedActivityUpdate(...)
-validateWorkerRoleUpdate(...)
-validateWorkerRoleDeletion(...)
-```
-
-Use names aligned with the repository’s existing naming conventions, not necessarily these examples.
-
-Specify the expected return type based on confirmed backend or repository evidence.
-
----
-
-## 9. Mandatory working-rules compliance
-
-For each important part of the proposed solution, explain how it complies with the supplied `MANDATORY WORKING RULES`.
-
-Call out any rejected alternatives and why they would violate those rules.
-
----
-
-## 10. Test plan
-
-Provide a detailed test matrix covering at least:
-
-### Planned activity
-
-* date remains valid for all workers;
-* changed date leaves one worker without a valid role;
-* multiple workers, with only one invalid;
-* empty validation response;
-* non-empty anomaly response;
-* validation API failure;
-* real update failure after successful validation.
-
-### Executed activity
-
-Cover the equivalent cases.
-
-### Worker-role modification
-
-* role dates change but all activities remain covered;
-* one activity becomes uncovered;
-* another role still covers the affected activity;
-* multi-role worker;
-* start date changed;
-* end date changed;
-* open-ended/null date where supported;
-* validation API failure.
-
-### Worker-role deletion
-
-* role is unused;
-* role is used but another valid role covers all activities;
-* role is the only coverage for one or more activities;
-* multi-role worker;
-* validation API failure;
-* real deletion failure after successful validation.
-
-Also include regression checks for unchanged create flows and unrelated worker/activity operations.
-
----
-
-## 11. Open questions and missing information
-
-List only questions that cannot be answered from the PDFs or repository.
-
-Prioritize questions for the backend developer, such as:
-
-* exact anomaly response schema;
-* whether null is ever returned instead of `[]`;
-* expected user-facing anomaly details;
-* exact endpoint prefix in each environment;
-* whether activity validation is mandatory only when the date changes;
-* role ID versus relation ID semantics;
-* date boundary and timezone rules.
-
-For each question, explain why the answer affects implementation.
-
----
-
-# Analysis quality requirements
-
-Your conclusions must be evidence-based.
-
-For every major finding:
-
-* include the exact repository file path;
-* include the relevant class, method, function, or exported symbol;
-* include line numbers where possible;
-* identify the dependency package and version where relevant;
-* distinguish confirmed facts from assumptions;
-* explain why the located code is part of the requested ticket.
-
-Search beyond obvious filenames and Italian/English terminology. Relevant code may use terms such as:
-
-```text
-worker
-role
-relation
-involved
-subject
-activity
-activities
-action
-execution
-planned
-validity
-start_date
-end_date
-pkIdRelazione
-anag_relazioni
-standard forms
-validate
-```
-
-Do not stop at the first apparent match. Trace every flow through to its real API request.
-
----
-
-# Final reminder
-
-This is an analysis-only task.
-
-Do not implement anything.
-
-Do not change any repository file.
-
-The final response must give me a precise technical explanation of the current issue, the exact involved files and functions, dependency ownership, and a standard step-by-step solution proposal based on:
-
-1. the attached tickets;
-2. the current repository implementation;
-3. the relevant ABACO dependencies;
-4. the backend developer’s endpoint and validation details;
-5. the supplied `MANDATORY WORKING RULES`.
-
+I will append the complete **MANDATORY WORKING RULES** below this section.
 
 
 # MANDATORY WORKING RULES

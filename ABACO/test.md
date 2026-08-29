@@ -1,10 +1,48 @@
-| Excel row | Current FE check | Covered behavior |
-|---|---|---|
-| `CONINS | Contract - contract insert` | `getPermit("CONINS", "DOMANDE")` | Create contract button, including `Salva e inserisci contratti`. |
-| `CONMOD | Contract - contract manage` | `getPermit("CONMOD", "DOMANDE")` | Contract edit/manage actions. Also required together with movement/plots permissions. |
-| `CONVIS | Contract - View` | `getPermit("CONVIS", "DOMANDE")` | Contract list visibility inside filiera. |
-| `FUNCT_CONTR_CAPO_FILIERA | Funzione SSO per la movimentazione del contratto Filiera` | `getPermit("FUNCT_CONTR_CAPO_FILIERA", "DOMANDE")` | Contract movement for filiera contracts, together with `CONMOD`. |
-| `FILINS | Inserimento filiera` | `getPermit("FILINS", "DOMANDE")` | Create filiera button and create/save handler. |
-| `FILMOD | Modifica filiera` | `getPermit("FILMOD", "DOMANDE")` | Edit/delete filiera buttons and handlers. |
-| `FILVIS | Visualizzazione filiera` | `getPermit("FILVIS", "DOMANDE")` | Filiera list/page visibility. |
-| `SOGG_PLOT_SC_SCHEDE | Accesso scheda appezzamenti dossier` | `getPermit("SOGG_PLOT_SC_SCHEDE", "SCHEDE")` | Add/select plots, together with `CONMOD`. |
+import { HTTPClient } from "@abaco/web-common/src/HTTP";
+import { PagedResults, PagingParams } from "@abaco/web-common/src/Paging";
+import { CatastoCouncil, CatastoMassivoProgress, CatastoMassivoStartResponse } from "../models/CatastoMassivo";
+
+export default class CatastoMassivoApi {
+    private http: HTTPClient;
+
+    constructor(http: HTTPClient) {
+        this.http = http;
+    }
+
+    public async getCouncils(filter: string | null, paging: PagingParams): Promise<PagedResults<CatastoCouncil>> {
+        const filters = ["fg_active eq 1"];
+        if (filter) {
+            filters.push(`^council_label like ${filter.toUpperCase()}`);
+        }
+
+        const res = await this.http.get("/sitiagri-rest-api/api_basic/v1/plots/dictionary_councils", {
+            params: {
+                offset: paging.offset,
+                count: paging.count,
+                filter: filters,
+                administrative_tree: true
+            }
+        });
+        return res.data;
+    }
+
+    public async startImport(council: CatastoCouncil): Promise<CatastoMassivoStartResponse> {
+        const province_code = council.province_code;
+        const cadastral_dataset = council.cadastral_dataset;
+        const council_code = council.council_code;
+
+        const url = `/aggiorna-catasto-api/api/v1/aggiornacatasto/regione/${cadastral_dataset} /provincia/${province_code}/comune/${council_code}`;
+        const res = await this.http.put(url, undefined, {
+            params: {
+                download: true,
+                fl_calcola_intersezioni: 1
+            }
+        });
+        return res.data;
+    }
+
+    public async getProgress(importId: number): Promise<CatastoMassivoProgress> {
+        const res = await this.http.get(`/aggiorna-catasto-api/api/v1/aggiornacatasto/progress/import/${importId}`);
+        return res.data;
+    }
+}

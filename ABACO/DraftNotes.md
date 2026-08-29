@@ -1288,15 +1288,6 @@ Module:widgets-container-module
     Da compilare portal
 
 
-# https://abacogroup.easyredmine.com/issues/224670
-    BRNACH: fix/224670-seed-unit-of-measure-filter
-    MODULE: activities-module
-    
-    Rilasciato activities-module 
-    non necessario aggiornamento i18n
-    Da compilare portal
-
-
 # https://abacogroup.easyredmine.com/issues/224791
     BRNACH: fix/224791-activity-category-selection
     MODULE: activities-module
@@ -1323,3 +1314,60 @@ Module:widgets-container-module
     non necessario aggiornamento i18n
     Da compilare portal
 
+
+# https://abacogroup.easyredmine.com/issues/222058
+    BRNACH: fix/222058-worker-role-activity-validation
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.18
+    necessario aggiornamento i18n
+    Da compilare portal
+
+    # -------
+
+    BRNACH: fix/222058-worker-role-activity-validation-farm-registry
+    MODULE: farm-registry
+    
+    Rilasciato farm-registry v4.11.15
+    necessario aggiornamento i18n
+    Da compilare portal
+
+    DI NUNZIO ANNA  DNNNNA67C60G878C
+
+
+# https://abacogroup.easyredmine.com/issues/225399
+    BRNACH: fix/225399-plot-table-scrollbar
+    MODULE: agreements-module
+    
+    Rilasciato agreements-module
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/225676
+    BRNACH: fix/225676-filiera-save-insert-contract-blank-page
+    MODULE: agreements-module
+    
+    Rilasciato agreements-module 1.3.8
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/224670
+    BRNACH: fix/224670-seed-unit-of-measure-filter
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.19
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/226450
+    BRNACH: feat/226450-import-catasto-section
+    MODULE: coldiretti-embedded-sections-module
+    
+    BRNACH: feat/226450-import-catasto
+
+    Rilasciato coldiretti-embedded-sections-module
+    necessario aggiornamento i18n
+    Da compilare portal
