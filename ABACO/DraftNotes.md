@@ -1007,57 +1007,6 @@ Module:widgets-container-module
     Rilasciato assets-module v2.40.9
     non necessario aggiornamento i18n
     Da compilare portal
-
-## ....... new supply chain contract......... ###
-    
-# https://abacogroup.easyredmine.com/issues/216641
-    BRNACH: feat/modulo-contratti-di-filiera
-    MODULE: agreements-module
-
-    Rilasciato agreements-module v1.2.0
-    necessario aggiornamento i18n
-    Da compilare portal
-
-   1. Gestione pagina filiere - FE (Manage Filiere Page - Frontend)
-    
-    This ticket is about building the entire Filiere Management section.    
-    This corresponds directly to:
-       - FS001 mockup (filiere dashboard)
-       - FS002 mockup (create/edit filiera form)
-
-
-
-# https://abacogroup.easyredmine.com/issues/216643
-    BRNACH: feat/modulo-contratti-di-filiera
-    MODULE: agreements-module
-
-    Rilasciato agreements-module v1.2.0
-    necessario aggiornamento i18n
-    Da compilare portal
-
-   2. Ticket #216643 — Gestione pagina contratti di filiera - FE    
-   
-    This ticket is for the Contracts Dashboard/List page.
-    You need a page that shows contracts belonging to a specific filiera.
-    This corresponds to:
-        - FS005 mockup
-
-
-# https://abacogroup.easyredmine.com/issues/216645
-    BRNACH: feat/modulo-contratti-di-filiera
-    MODULE: agreements-module
-
-    Rilasciato agreements-module v1.2.0
-    necessario aggiornamento i18n
-    Da compilare portal
-
-   3. Ticket #216645 — Pagina creazione nuovo contratto per una filiera - FE
-        
-    (Create New Contract Page - Frontend)
-    This is the biggest and most important ticket.
-    This corresponds to:
-       - FS006 mockup
-       - contract creation flow in functional analysis
      
 # https://abacogroup.easyredmine.com/issues/216647
     BRNACH: feature/216647-contractor-plots-selection
@@ -1173,16 +1122,6 @@ Module:widgets-container-module
     non necessario aggiornamento i18n
     Da compilare portal
 
-
-# https://abacogroup.easyredmine.com/issues/219538
-    BRNACH: fix/219538-machinery-update-put
-    MODULE: assets-module
-    
-    Rilasciato assets-module
-    non necessario aggiornamento i18n
-    Da compilare portal
-
-
 # https://abacogroup.easyredmine.com/issues/221291
     BRNACH: feature/221291-beleaf-demetra-visits-integration
     MODULE: assets-module
@@ -1215,4 +1154,220 @@ Module:widgets-container-module
     
     Rilasciato map_web_module v2.24.5
     non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/220767
+    BRNACH: fix/220767-validate-supplier-by-document-date
+    MODULE: assets-module 
+     
+    Rilasciato assets-module v2.40.13
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/222720
+    BRNACH: feature/222720-custom-lot-number-execution-fe
+    MODULE: activities-module v2.69.11
+    
+    Rilasciato activities-module v2.69.11
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/222458
+    BRNACH: fix/222458-preserve-warehouse-lot-context
+    MODULE: assets-module
+    
+    Rilasciato assets-module v2.40.12
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/222766
+    BRNACH: fix/222766-personal-data-sheet-deletion-year
+    MODULE: farm-registry
+    
+    Rilasciato farm-registry v4.11.14
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/219538
+    BRNACH: fix/219538-machinery-update-put
+    MODULE: activities-module 
+    
+    Rilasciato activities-module v2.69.11
+    necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/221158
+    BRNACH: fix/forbid-diff-crop-select-221158
+    MODULE: activities-module 
+    
+    Rilasciato activities-module v2.69.12
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+    
+# https://abacogroup.easyredmine.com/issues/223217
+    BRNACH: fix/223217-contract-plot-map-zoom
+    MODULE: agreements-module
+    
+    Rilasciato agreements-module
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+    
+# https://abacogroup.easyredmine.com/issues/223217
+    BRNACH: fix/223217-contract-plot-map-zoom
+    MODULE: portal-global-state
+    
+    Rilasciato portal-global-state v2.22.3
+    necessario aggiornamento i18n
+    Da compilare portal
+
+    ---
+
+    BRNACH: fix/223217-contract-plot-map-zoom
+    MODULE: agreements-module
+    
+    Rilasciato agreements-module v1.3.4
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/223359
+    BRNACH: fix/223359-activity-plots-list-map-sync
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.13
+    non necessario aggiornamento i18n
+    Da compilare portal
+    
+# https://abacogroup.easyredmine.com/issues/222964
+    BRNACH: fix/222964-coldiretti-supply-chain-crop-filter
+    MODULE: supply-chain-view-module
+    
+    Rilasciato supply-chain-view-module v1.3.4
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/220263
+    BRNACH: feat/220263-agreements-filiera-competencies
+    MODULE: agreements-module
+    
+    Rilasciato agreements-module v1.3.5
+    necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/224502
+    BRNACH: fix/224502-filiera-contract-dropdown
+    MODULE: supply-chain-view-module
+    
+    Rilasciato supply-chain-view-module v1.3.5
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/221571
+    BRNACH: fix/221571-building-cadastral-parcel-validation
+    MODULE: assets-module
+    
+    Rilasciato assets-module v2.40.14
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/224656
+    BRNACH: fix/224656-activity-plots-list-map
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.14
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/224791
+    BRNACH: fix/224791-activity-category-selection
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.17
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/224811
+    BRNACH: fix/224811-activity-plots-loading-performance
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.15
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/224811
+    BRNACH: fix/224811-activity-plots-loading-performance
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.15
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/222058
+    BRNACH: fix/222058-worker-role-activity-validation
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.18
+    necessario aggiornamento i18n
+    Da compilare portal
+
+    # -------
+
+    BRNACH: fix/222058-worker-role-activity-validation-farm-registry
+    MODULE: farm-registry
+    
+    Rilasciato farm-registry v4.11.15
+    necessario aggiornamento i18n
+    Da compilare portal
+
+    DI NUNZIO ANNA  DNNNNA67C60G878C
+
+
+# https://abacogroup.easyredmine.com/issues/225399
+    BRNACH: fix/225399-plot-table-scrollbar
+    MODULE: agreements-module
+    
+    Rilasciato agreements-module
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/225676
+    BRNACH: fix/225676-filiera-save-insert-contract-blank-page
+    MODULE: agreements-module
+    
+    Rilasciato agreements-module 1.3.8
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/224670
+    BRNACH: fix/224670-seed-unit-of-measure-filter
+    MODULE: activities-module
+    
+    Rilasciato activities-module v2.69.19
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/226450
+    BRNACH: feat/226450-import-catasto-section
+    MODULE: coldiretti-embedded-sections-module
+    
+    BRNACH: feat/226450-import-catasto
+
+    Rilasciato coldiretti-embedded-sections-module
+    necessario aggiornamento i18n
     Da compilare portal
