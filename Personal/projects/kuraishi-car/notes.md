@@ -6,6 +6,7 @@ Bug fixes
 - both menus, the primary and secodary does not have active state
 - export a good quality image of the barcode to use in different branding documents
 
-
 Branch : Backend
 Branch : Frontend
+
+# -----------
