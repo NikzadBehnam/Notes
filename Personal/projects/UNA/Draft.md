@@ -38,6 +38,13 @@ Current safe process is:
 4. If that user must be admin, add their email to `ADMIN_EMAILS` (and/or set `role=ADMIN` in DB).
 5. Set `ALLOW_PUBLIC_SIGNUP="false"` again and restart/redeploy.
 
-Important: the **bootstrap flow** is mainly for creating the first admin when none exists, not for day-to-day user onboarding.
+# -------
 
-If you want, the next improvement is an **admin-only “Create User/Invite User”** flow so public signup can stay disabled permanently.
+Ask from Shoukat
+
+- do you have social media promotions, if yes we can add youtube widgets in the website
+- the whatsApp widget too
+
+# -------
+
+- Testimonials
