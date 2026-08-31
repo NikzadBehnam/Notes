@@ -1366,8 +1366,17 @@ Module:widgets-container-module
     BRNACH: feat/226450-import-catasto-section
     MODULE: coldiretti-embedded-sections-module
     
-    BRNACH: feat/226450-import-catasto
+    Rilasciato coldiretti-embedded-sections-module  0.7.0
+    Rilasciato con portal
+    Rilasciato i18n 
 
-    Rilasciato coldiretti-embedded-sections-module
-    necessario aggiornamento i18n
+
+# https://abacogroup.easyredmine.com/issues/224817
+    BRNACH: fix/224817-avoid-unnecessary-warehouse-api-calls
+    MODULE: activities-module
+    
+    Rilasciato activities-module
+    non necessario aggiornamento i18n
     Da compilare portal
+
+    

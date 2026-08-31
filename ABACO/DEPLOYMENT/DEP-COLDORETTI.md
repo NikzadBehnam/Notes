@@ -22,14 +22,14 @@
     - git checkout -b branch/147.0.5-coldiretti master
 
 1. Synchronize Environment
-- [+] Fetch latest changes from the remote: `git fetch`
-- [+] Pull the latest code: `git pull`
-- [+] Install dependencies from lock file: `npm ci` 
+- [] Fetch latest changes from the remote: `git fetch`
+- [] Pull the latest code: `git pull`
+- [] Install dependencies from lock file: `npm ci` 
 
 1. Update Dependencies
 
-- [+] Choose update method:
-  -[+] Latest Version (`master`):
+- [] Choose update method:
+  -[] Latest Version (`master`):
     -[+] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
     -[+] Run `npm i` to install updated packages.
   - [] Older Version:
@@ -41,17 +41,17 @@
   -[+] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
   -[+] Copy the theme `.scss` file to `src/assets/styles/themes`.
       - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/blob/master/themes/coldiretti-demo.scss?ref_type=heads
-  -[] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
-  -[] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
+  -[+] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
+  -[+] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
   -[+] *⚠️ Remove the theme file before committing*.
-  -[] Run the linter to check for code quality issues: `npm run lint`.
-  -[] Open the portal in a browser and confirm it loads without errors.
+  -[+] Run the linter to check for code quality issues: `npm run lint`.
+  -[+] Open the portal in a browser and confirm it loads without errors.
 
 
 1. Commit, Push, and Tag
-- [] Commit all changes, "Update packages"
-- [] Push the changes to the remote repository.
-- [] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
+- [+] Commit all changes, "Update packages"
+- [+] Push the changes to the remote repository.
+- [+] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
 - [] Create and push a new release tag (e.g., `v1.2.3`).
   - "`npm version patch`" for bugfixes, "`npm version minor`" for features, "`npm version major`"
     - if you were needed to change the tag manually in package.json remember to change it also in package-lock
@@ -150,25 +150,16 @@ Tickets:
 https://abacogroup.easyredmine.com/issues/224791
 
 # ----------
-Rilasciato con portal v151.1.10
 
+Rilasciato portal v151.2.0  (Coldiretti)
+Rilasciato i18n v151.0.11
 
+Tickets
 
-
-
-- the menu should be dynamic, in scroll state is should disapear, for more convinience on accessing the content
-- add more items regarding on specific place(mycars, add new car, my favorit cars ...)
-- customer should get contact the admin, regarding the specific item
-- shadcn dark mode
-- the wite color with orange background is not so readable
-- privacy and term of services section on the footer
-- for every seTimout or any test case add a console warn to be sure on the time of deployment you remove it
-- it seems that the photo quality is getting decreased on upload
-- add a customized 404 page, redirect to home page
-- on login the use should redirect to the profile, accessing the dashboard to add new cars, list of favorit cars, ....
-- on car-purchase the user should notified in case if the filter is active or not
-- the inserted car is not in the list
-
+https://abacogroup.easyredmine.com/issues/222058
+https://abacogroup.easyredmine.com/issues/225676
+https://abacogroup.easyredmine.com/issues/224670
+https://abacogroup.easyredmine.com/issues/226450
 
 
 
