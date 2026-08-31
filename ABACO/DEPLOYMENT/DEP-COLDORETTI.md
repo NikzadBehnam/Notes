@@ -1,19 +1,4 @@
-
-  Models with vue3 versions -> 
-    - tiles-framework - https://gitlab.fe.abacogroup.eu/abaco4farmer/tiles-framework/-/tags
-    - abaco4farmer-components 
-    - web-common - https://gitlab.fe.abacogroup.eu/abaco4farmer/abaco4farmer-web-common/-/tags
-    - sso-web-module - https://gitlab.fe.abacogroup.eu/abaco4farmer/sso-web-module/-/tags
-    - map-web-module 
-    - menu-module - https://gitlab.fe.abacogroup.eu/abaco4farmer/abaco4farmer-web-common/-/tags
-
-
-# Generatl Deployment Checklist
--[] release v150.0.4 from master
--[] release the i18n
--[] release the chart
-
-*Branch DEMO* git checkout -b branch/149.5.1-coldiretti v149.5.0
+*Branch DEMO* git checkout -b branch/151.1.3-bis-coldiretti v151.1.3
 
 # RELEASE A PATCH FOR A FIX ON AN OLDER VERSION OF A MODULE
     1- [] Do the fix on the latest/master of the module
@@ -31,20 +16,20 @@
 # DEPLOYMENT NEW PORTAL
 1. Branching
 
-- [+] Determine the correct branch:
-  - [+] Latest Version: Working on `master`.
+- [] Determine the correct branch:
+  - [] Latest Version: Working on `master`.
   - [] Older Version: Create a new branch from the specific tag (e.g., `git checkout -b branch/0.1.2-1 v0.1.2`).
     - git checkout -b branch/147.0.5-coldiretti master
 
 1. Synchronize Environment
--[+] Fetch latest changes from the remote: `git fetch`
--[+] Pull the latest code: `git pull`
--[+] Install dependencies from lock file: `npm ci` 
+- [] Fetch latest changes from the remote: `git fetch`
+- [] Pull the latest code: `git pull`
+- [] Install dependencies from lock file: `npm ci` 
 
 1. Update Dependencies
 
-- [+] Choose update method:
-  -[+] Latest Version (`master`):
+- [] Choose update method:
+  -[] Latest Version (`master`):
     -[+] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
     -[+] Run `npm i` to install updated packages.
   - [] Older Version:
@@ -53,20 +38,20 @@
     - [] Run `npm i` to install updated packages.
 
 1. Local Testing
-  -[] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
-  -[] Copy the theme `.scss` file to `src/assets/styles/themes`.
+  -[+] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
+  -[+] Copy the theme `.scss` file to `src/assets/styles/themes`.
       - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/blob/master/themes/coldiretti-demo.scss?ref_type=heads
-  -[] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
-  -[] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
-  -[] *⚠️ Remove the theme file before committing*.
-  -[] Run the linter to check for code quality issues: `npm run lint`.
-  -[] Open the portal in a browser and confirm it loads without errors.
+  -[+] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
+  -[+] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
+  -[+] *⚠️ Remove the theme file before committing*.
+  -[+] Run the linter to check for code quality issues: `npm run lint`.
+  -[+] Open the portal in a browser and confirm it loads without errors.
 
 
 1. Commit, Push, and Tag
--[] Commit all changes, "Update packages"
--[] Push the changes to the remote repository.
--[] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
+- [+] Commit all changes, "Update packages"
+- [+] Push the changes to the remote repository.
+- [+] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
 - [] Create and push a new release tag (e.g., `v1.2.3`).
   - "`npm version patch`" for bugfixes, "`npm version minor`" for features, "`npm version major`"
     - if you were needed to change the tag manually in package.json remember to change it also in package-lock
@@ -86,6 +71,7 @@
 
   New script for generating the backup.zip by Massimiliano Casadei
     - run `npm i` (only for the initial installation of the dependency) and
+  - fetch and pull the master
     -  then execute `npm run release`.
     The script asks some questions, but it's simple: 
 
@@ -100,7 +86,7 @@ OLD way of updatind the backup.zip (NOT WORKING)
 - [] Push the commit to the remote repository.
 - [] Create a corresponding tag for the i18n repository in GitLab.
 
-8. Update Deployment `Chart.yaml`
+1. Update Deployment `Chart.yaml`
 
 - [] Navigate to the `deployment` repository (link provided by Simone).
 - [] Open `Chart.yaml`.
@@ -153,138 +139,27 @@ OLD way of updatind the backup.zip (NOT WORKING)
   - [] let the dev pipline goes on and stop the two others
   - [] once the dev pipline passed successfully start the test and then finaly the live
 
+# ----------
+pipeline per il i18n v151.0.10 partita
 
 
-# --------- PORTALS RELEASES ---------
+La pipeline per il portal v151.1.10 partita (Coldiretti) 
+https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/186387
 
-# https://abacogroup.easyredmine.com/issues/193527
- - branch/141.3.1-niab
- - Pipeline:  https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/143767
-  
-  
-# https://abacogroup.easyredmine.com/issues/194412
- - branch/142.4.7-coldiretti
- - Pipeline:  https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/144954
+Tickets:
+https://abacogroup.easyredmine.com/issues/224791
 
+# ----------
 
-# https://abacogroup.easyredmine.com/issues/193527
- - v141.3.3
- - https://gitlab.fe.abacogroup.eu/niab/deployment/-/pipelines/145508
- 
- 
-# no ticket yet
- - branch/140.3.14-malta
- - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/146835
-
-
-
-# Fri, Nov  7, 2025  2:46:17 PM
-- Portal release for malta -  v140.3.15
-  https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/147905
-  
-- malta-chart released - v140.3.11
-  - https://gitlab.fe.abacogroup.eu/malta-s4f/deployment/-/pipelines/147953
-
-
-# Tue, Nov 11, 2025  4:52:24 PM
-- Portal release for malta -  v140.3.16
-  - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/148387
-
-
-- malta-chart released - v140.3.12
-  - https://gitlab.fe.abacogroup.eu/malta-s4f/deployment/-/pipelines/148411
-
-
-# Wed, Nov 12, 2025  9:53:37 AM
-
-- Portal release for coldiretti -  v144.1.2
-  - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/148464
-
-- i18n-repository Updated backup
-  - https://gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/148487
-
-- Portal release for coldiretti - v144.1.3
-  - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/148546
-
-- Release i18n-repository v144.1.5
-  - https:s//gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/148487
-
-# Wed, Nov 19, 2025 11:46:04 AM
-- Release i18n-repository v144.1.8
-  
-
-# Fri, Nov 28, 2025  3:28:19 PM
-- Portal release for coldiretti -  v144.1.4
-  - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/150946
-  
-- Portal release for malta - v140.3.17
-  - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/151069
-
-- Portal release for S4F italia -  v145.0.0
-  - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/151294
-
-
-# Malta Notes
-Release work flow: 
-- After all you have done (Portal, i18 ) make note of what you have done and pass the ticket to Giovani Orecchia to update and release the chart
-
-# Coldiretti Notes
-Release work flow
-After all you have done (Portal, i18, update) make note of what you have done a note and pass the ticket to Nasim
-
-
-# Release notes
- Rilasciato il portale v------ con packaggie aggiornati.
- Rilasciato chart.yaml v-----
- Rilasciato i18n-repository v-----
- Rilasciato con poral v-----
-
-
-
-
-
--------------
-
-
-
-I create the new branch from the version before releasing th malta portal
-
-- delete the previews branch/140.3.17-malta
-- create git checkout -b  branch/140.3.17-malta v140.3.16
-- run npm ci
-- I check, and confirmed that I did add the fix on the v4.11.1 farm-registry, tagging it to 4.11.2-a
-  - https://gitlab.fe.abacogroup.eu/abaco4farmer/farm-registry/-/commit/a236d9e90ea43a2b9734f4397ceb5f3cca2d5bfb
-- then I update the portal package.json with farm-registery 4.11.2-a
-- then run npm i
-
--------------------
-
-- removed the prviuse tag and branch 4.11.2-a
-
-- create new branch from the farm-registry tag that was in portal before updating anything form malta 
-  git checkout -b  branch/v4.11.1-a  v4.11.1
-
-- on that branch I add the fix changes, 
-
-- update the only the verison of package.json and package-lock.json (every other dependency remained as it was on v4.11.1)
-
-- then run npm ci
-- commit then push the branch
-- add the new tag v4.11.1-a from that branch branch/v4.11.1-a
-
------------------
-- on portal the branch/140.3.17-malta was already created, from 140.3.16
-- i reset the package-lock and package
-- then run npm ci
-
-
-
-La pipeline per i18n-repository v149.0.2 partita
-
-
-La pipeline per portal v149.5.1 partita
-https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/169851
-
+Rilasciato portal v151.2.0  (Coldiretti)
+Rilasciato i18n v151.0.11
 
 Tickets
-https://abacogroup.easyredmine.com/issues/214838
+
+https://abacogroup.easyredmine.com/issues/222058
+https://abacogroup.easyredmine.com/issues/225676
+https://abacogroup.easyredmine.com/issues/224670
+https://abacogroup.easyredmine.com/issues/226450
+
+
+

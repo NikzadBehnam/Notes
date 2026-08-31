@@ -1,50 +1,33 @@
-Implement checklist step 29 only.
+I have added an abc-tool-button on line 38 of src\modules\new-agreements\components\detail\forms\index.vue
 
-```json
-{
-  "step_number": 29,
-  "id": "29",
-  "title": "Migration governance cleanup",
-  "branch": "general-fixes/28-prisma-migration-governance",
-  "commit_message": "chore(db): establish migration governance and normalize migration strategy",
-  "depends_on": ["28"],
-  "tasks": [
-    "Choose migration approach (keep full history vs pre-prod baseline squash)",
-    "Create docs/db-migration-policy.md with strict migration rules",
-    "Prevent duplicate or conflicting migration naming going forward",
-    "Verify prisma migrate status is clean"
-  ],
-  "verification": ["pnpm lint", "npx prisma migrate status"]
-}
-```
+do exactly bellow points
 
-If blocked, stop and report blocker with exact file/line and proposed fix.
+- onclick this button call the fucntion addPlots
+- inside src\modules\new-agreements\api\NewAgreementsApi.ts configure the API call bellow
+  https://collaudo-abaco.bluarancio.com/sitiagri-rest-api/api_sso/v1/plots/subjects/4 19077/2026/plots?include*supply_chain=true&offset=0&count=300&*=1780491518967
 
-Output:
+do not start code, give me your suggesition then we can improve the concept and make some checklist then we will code step by step
 
-1. changed files
-2. why
-3. verification results
-4. do not commit changes, I will manually after the code review
+# -------BUILD-------
 
----
+export NEXT_PUBLIC_SITE_URL="https://www.una-allestimenti.com"
+export BETTER_AUTH_URL="https://www.una-allestimenti.com"
+export BETTER_AUTH_TRUSTED_ORIGINS="https://www.una-allestimenti.com,https://una-allestimenti-website.vercel.app"
+export ADMIN_EMAILS="admin@company.com"
+export BETTER_AUTH_SECRET="k94D6x2sWPm8vLQzYbN7tRc5HfUa3EoJp1Mi0XsGvAq="
+export UPLOADTHING_TOKEN="placeholder-build-token"
+export PREVIEW_SECRET="preview-secret-build-only"
+export NEXT_PUBLIC_PREVIEW_TOKEN="preview-token-build-only"
+export ADMIN_BOOTSTRAP_PASSWORD="bootstrap-build-only"
 
-Right now, with `ALLOW_PUBLIC_SIGNUP=false`, nobody can register from `/register` (including admins).  
-Current safe process is:
+pnpm run build
 
-1. Set `ALLOW_PUBLIC_SIGNUP="true"` in env.
-2. Restart the app (or redeploy if on Vercel).
-3. Admin opens `/en/register` (or `/it/register`) and creates the user account.
-4. If that user must be admin, add their email to `ADMIN_EMAILS` (and/or set `role=ADMIN` in DB).
-5. Set `ALLOW_PUBLIC_SIGNUP="false"` again and restart/redeploy.
+# -------------
 
-# -------
+ACCOUNTS:
 
-Ask from Shoukat
+Gmail:
+una202606@gmail.com / Una202606@Mantova
 
-- do you have social media promotions, if yes we can add youtube widgets in the website
-- the whatsApp widget too
-
-# -------
-
-- Testimonials
+https://console.neon.tech/
+una202606@gmail.com / Una202606@Mantova

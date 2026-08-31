@@ -1,641 +1,782 @@
-Below are **3 separate markdown notes**, one for each frontend ticket.
+# Catasto Massivo / Import Catasto — Frontend Technical Analysis
+
+## Objective
+
+I need you to perform a **deep technical analysis of the current repository and all relevant installed/interdependent modules** in order to determine exactly **where this new frontend feature belongs and which modules/files are involved**.
+
+**Do not implement or modify any code yet.**
+
+This is an **analysis and implementation-planning phase only**.
+
+I will review your findings, involved modules/files, and proposed implementation approach before we start coding.
 
 ---
 
-# Ticket 1 — #216641 — Gestione pagina filiere - FE
+# Important Project Context
 
-```md
-# Ticket #216641 — Gestione pagina filiere - FE
+This application is divided into multiple frontend/modules/packages.
 
-## Codex Prompt
+Some modules are installed as dependencies inside other modules and functionality is often distributed across them.
 
-We need to implement the frontend ticket **#216641 - Gestione pagina filiere - FE**.
+Therefore, the **most important part of this analysis is NOT to assume that the current repository is the correct place for the whole implementation**.
 
-The request is to create the new frontend page for managing "Filiere" related to supply-chain contracts.
+You must inspect:
 
-The page must support:
-- list of filiere
-- create new filiera
-- edit filiera
-- delete filiera
+- the current module/repository;
+- its installed ABACO/internal modules;
+- relevant package dependencies;
+- route ownership;
+- menu/navigation integration;
+- shared components;
+- API/service layers;
+- existing Back Office features;
+- existing municipality-selection logic;
+- authentication/competency handling;
+- polling implementations;
+- any other dependent module involved in this workflow.
 
-Important rules:
-- Do NOT start coding yet.
-- First inspect the existing codebase and explain the current structure.
-- Follow existing project patterns.
-- Do NOT refactor unrelated code.
-- Keep changes minimal and safe.
-- Reuse existing shared/global components.
-- Do not rename, move, or restructure files unless strictly necessary.
-
-There is already a similar page/module structure that can be used as reference.
-Start the analysis from:
-
-src\modules\new-agreements\menu.ts
-
-Look for:
-
-descrKey: "new-agreements-menu"
-
-Use this existing module/page structure as reference for the new "Gestione pagina filiere" implementation.
-
-Please inspect:
-- how the module is registered in the menu
-- how routes are defined
-- how the list page is structured
-- how table/search/filter components are used
-- how create/edit pages are opened
-- how mock/demo data or service calls are handled
-- existing styling and layout conventions
-
-For now, only analyse and report:
-1. which files are relevant
-2. which existing components can be reused
-3. where the new filiere page should be added
-4. the smallest safe implementation plan
-5. any risks or dependencies
-
-Do not write code yet.
-```
-
-## Step-by-step implementation after Codex analysis
-
-### Step 1 — Inspect existing module structure
-
-Check:
-
-```txt
-src/modules/new-agreements/menu.ts
-```
-
-Then follow imports/routes/components used by that module.
-
-Goal: understand how to add a new module/page without changing global architecture.
+The goal is to determine **exactly which module owns each responsibility** before proposing changes.
 
 ---
 
-### Step 2 — Add menu entry for filiere page
+# Additional Update from Simone
 
-Add a new menu item following the same pattern as `new-agreements-menu`.
+Simone has informed me that he has already created the new menu entry in **Coldiretti DEV**.
 
-Suggested label:
+The menu entry is currently named:
 
-```txt
-Gestione filiere
+```text
+import-catasto
 ```
 
-or
+Consider this an important piece of information during the analysis.
 
-```txt
-Nuova sezione filiere
-```
+Do **not** automatically create another menu entry in code.
 
-Keep naming consistent with existing translations.
+Instead, investigate what the existing Coldiretti DEV menu configuration means technically.
+
+Determine whether:
+
+- the menu entry is externally/configuration-driven;
+- it already points to a route expected from one of our frontend modules;
+- the current repository must only provide the corresponding route/page;
+- additional local route registration is required;
+- some installed module owns the navigation/router configuration;
+- or any other integration is necessary.
+
+Clearly explain your conclusion.
 
 ---
 
-### Step 3 — Add route for filiere list page
+# Functional Requirement
 
-Create only the minimum route needed for the list page.
+I will attach the latest analysis/specification note for this ticket.
 
-Example route idea:
+Treat that document as the primary functional reference.
 
-```txt
-/filiere
+The frontend functionality currently required is approximately:
+
+```text
+BACK OFFICE
+    ↓
+import-catasto
+    ↓
+Open dedicated page
+    ↓
+Search/select Comune
+    ↓
+Start cadastral bulk import
+    ↓
+Receive importId
+    ↓
+Poll import progress
+    ↓
+Display import progress/results
 ```
 
-or follow existing module route naming convention.
+The final `requestId` / WFS/intersection-processing phase is **NOT currently part of the implementation scope** because Simone is still defining that part.
+
+Do not design or implement speculative `requestId` behaviour.
 
 ---
 
-### Step 4 — Create filiere list page
+# Current Frontend Scope
 
-Build a page similar to the screenshot/table style.
+Based on the attached analysis note, the current frontend needs to support the following.
 
-Required table columns:
+## 1. Page integration
 
-```txt
-ID
-Codice
-Descrizione
-Coltura
-Varietà
-Data Inizio
-Data Fine
-CUAA Capo Filiera
-Capo Filiera
-N. Contratti attivi
+A dedicated Back Office page for the cadastral bulk-import feature.
+
+No additional filters are required in the standard yellow toolbar.
+
+Determine:
+
+- which module should contain this page;
+- how comparable Back Office pages are registered;
+- which router/module owns the route;
+- how the externally created `import-catasto` menu entry should resolve to this page.
+
+---
+
+## 2. Competency / authorization
+
+The feature is associated with the competency/module:
+
+```text
+CATASTO_BATCH
+```
+
+Investigate the existing competency/authorization conventions.
+
+Determine whether frontend changes are actually required for this competency or whether menu visibility is already fully handled externally.
+
+Reference existing similar Back Office features and their exact implementation patterns.
+
+---
+
+## 3. Comune selection
+
+We must reuse the same searchable Comune-selection behaviour already used when inserting/creating an **appezzamento**.
+
+Do not propose a new custom selector unless the architecture absolutely requires it.
+
+Find the exact existing implementation:
+
+- module;
+- component;
+- service/API layer;
+- model/type;
+- autocomplete component;
+- relevant functions/computed properties/watchers;
+- any shared `abc-*` components involved.
+
+The Comune API request for this feature must include:
+
+```text
+administrative_tree=true
+```
+
+because this makes the API return the additional fields:
+
+```text
+cadastral_dataset
+province_code
+```
+
+Together with:
+
+```text
+council_code
+```
+
+these values are required to start the import.
+
+Determine the cleanest standard way to reuse or extend the existing Comune-selection implementation without duplicating logic.
+
+---
+
+## 4. Start bulk cadastral import
+
+After selecting a Comune, the frontend calls:
+
+```http
+PUT /api/v1/aggiornacatasto/regione/{regione}/provincia/{provincia}/comune/{comune}
+```
+
+The mapping must be:
+
+```text
+{regione}   -> selectedComune.cadastral_dataset
+{provincia} -> selectedComune.province_code
+{comune}    -> selectedComune.council_code
+```
+
+Example:
+
+```text
+cadastral_dataset = VENETO
+province_code      = PD
+council_code       = A001
+```
+
+becomes:
+
+```http
+PUT /api/v1/aggiornacatasto/regione/VENETO/provincia/PD/comune/A001
+```
+
+Expected success response:
+
+```json
+{
+  "importId": 15
+}
+```
+
+Investigate where this API call should live according to the current application architecture.
+
+Do not simply add HTTP calls directly inside the page if existing project conventions use:
+
+- API clients;
+- repositories;
+- services;
+- composables;
+- stores;
+- shared HTTP wrappers;
+- module-specific API classes;
+- or another established pattern.
+
+Find and reference the correct existing convention.
+
+---
+
+## 5. Import progress polling
+
+After receiving the `importId`, the frontend must periodically call:
+
+```http
+GET /api/v1/aggiornacatasto/progress/import/{importId}
+```
+
+Example response:
+
+```json
+{
+  "importId": 15,
+  "reqId": 5,
+  "codComune": "L087",
+  "fogliTotali": 10,
+  "fogliElaborati": 10,
+  "fogliScartati": 0,
+  "particelleTotali": 2487,
+  "particelleElaborate": 2487,
+  "particelleScartate": 0,
+  "errorLog": null
+}
+```
+
+The polling interval is still to be decided.
+
+Search the codebase and installed modules for existing polling implementations.
+
+Pay particular attention to established conventions for:
+
+- timers;
+- API polling;
+- stopping polling;
+- component cleanup/unmount/destroy;
+- navigation away from the page;
+- request errors;
+- retry behaviour;
+- avoiding duplicate timers;
+- avoiding concurrent duplicate polling requests.
+
+Recommend the implementation that best follows existing project conventions.
+
+---
+
+## 6. Progress presentation
+
+The frontend must display the useful progress information returned by the API.
+
+At minimum, consider:
+
+```text
+fogliTotali
+fogliElaborati
+fogliScartati
+
+particelleTotali
+particelleElaborate
+particelleScartate
+
+errorLog
+```
+
+The specification intentionally leaves the presentation approach to the frontend.
+
+Before suggesting a new UI, inspect the project for existing conventional/shared UI components.
+
+In particular, investigate whether we already have appropriate:
+
+```text
+abc-*
+```
+
+components for things such as:
+
+- cards;
+- progress indicators;
+- alerts;
+- loading states;
+- error messages;
+- buttons;
+- autocomplete;
+- information rows;
+- status indicators;
+- empty states;
+- notifications.
+
+Prefer existing standard components and visual patterns over introducing custom implementations.
+
+If progress bars are appropriate, explain whether the existing API provides enough information to calculate them safely.
+
+Do **not** invent an unsupported single overall progress percentage if no business rule exists for combining cadastral sheets and parcels.
+
+---
+
+# Backend Validation Behaviour
+
+The PUT API will eventually perform backend checks such as:
+
+- preventing another import for the same Comune while one is already running;
+- limiting the maximum number of simultaneous imports.
+
+These validations belong to the backend.
+
+For the frontend, analyze only:
+
+- how API errors are conventionally handled;
+- where they should be surfaced;
+- whether the API's returned error message can be displayed directly;
+- whether an existing notification/error component should be used.
+
+Do not move backend validation logic into the frontend.
+
+---
+
+# Explicitly Out of Scope for Now
+
+The following part must **NOT be implemented or fully designed yet**:
+
+```text
+reqId
+    ↓
+intersection calculation
+    ↓
+WFS polling
+    ↓
+intersection result
+```
+
+The progress API currently returns `reqId`, but Simone has explicitly said that he still needs to define how that final phase should work.
+
+Therefore:
+
+- acknowledge `reqId` in the response model if technically necessary;
+- do not invent an endpoint;
+- do not invent polling behaviour;
+- do not implement intersection processing;
+- do not create speculative UI for it.
+
+Leave this part for a later phase.
+
+---
+
+# MOST IMPORTANT ANALYSIS — MODULE OWNERSHIP
+
+Because this project is split across installed modules, I need a very thorough module-level analysis.
+
+Do not assume the current module owns everything.
+
+Trace the feature across the actual dependency architecture.
+
+For every major responsibility, determine the owner:
+
+| Responsibility                               | Module / package to determine |
+| -------------------------------------------- | ----------------------------- |
+| `import-catasto` menu/navigation integration | ?                             |
+| Route registration                           | ?                             |
+| Back Office page                             | ?                             |
+| Competency handling                          | ?                             |
+| Comune autocomplete                          | ?                             |
+| Comune API service                           | ?                             |
+| Shared `abc-*` UI components                 | ?                             |
+| HTTP client/API layer                        | ?                             |
+| Bulk import API                              | ?                             |
+| Progress polling                             | ?                             |
+| Notifications/errors                         | ?                             |
+
+Inspect relevant:
+
+```text
+package.json
+lock files
+workspace configuration
+module aliases
+internal package imports
+installed ABACO dependencies
+router definitions
+menu/navigation integrations
+shared libraries
+API/service folders
+```
+
+If an installed dependency contains the actual implementation source relevant to this feature, inspect it as well.
+
+I specifically want to avoid implementing something in the current module that properly belongs to another ABACO module.
+
+---
+
+# Existing Conventions Are Mandatory
+
+This project already contains established architecture and reusable components.
+
+Before proposing any new abstraction, identify whether an existing solution already exists.
+
+Search specifically for similar implementations involving:
+
+- Back Office pages;
+- external/configuration-driven menu entries;
+- competency-controlled pages;
+- Comune autocomplete;
+- `dictionary_councils`;
+- `administrative_tree`;
+- `abc-*` components;
+- async actions;
+- long-running operations;
+- polling;
+- progress displays;
+- API error handling;
+- page lifecycle cleanup.
+
+Reuse established conventions whenever possible.
+
+Do not suggest introducing a new generic component, helper, service, composable, store, or abstraction unless there is a concrete architectural reason and no suitable existing solution.
+
+---
+
+# MANDATORY: No Code Changes
+
+At this stage:
+
+**DO NOT implement anything.**
+
+Do not:
+
+- create files;
+- edit files;
+- delete files;
+- refactor code;
+- change configuration;
+- install/update dependencies;
+- change package versions;
+- automatically format files;
+- create routes;
+- create components;
+- add services;
+- create tests.
+
+Only inspect and analyze.
+
+---
+
+# Expected Output
+
+Provide the analysis in the following structure.
+
+## 1. Executive Technical Summary
+
+Explain:
+
+- how this feature fits into the current architecture;
+- which module should own the page;
+- which other modules are involved;
+- whether Simone's existing `import-catasto` menu entry requires any additional frontend menu configuration.
+
+---
+
+## 2. Module Dependency / Ownership Map
+
+Provide a clear map such as:
+
+```text
+Module A
+  └─ responsibility...
+
+Module B
+  └─ responsibility...
+
+Shared Module C
+  └─ reusable components...
+
+Current repository
+  └─ exact responsibility...
+```
+
+Explain why each responsibility belongs there.
+
+---
+
+## 3. Existing Implementations to Reuse
+
+List the relevant existing implementations you found.
+
+For each one provide:
+
+```text
+Module/package
+File path
+Component/class/function
+What it currently does
+Why it is relevant
+How it should be reused
+```
+
+Pay special attention to the existing appezzamento Comune selector.
+
+---
+
+## 4. Exact Files Potentially Involved
+
+Separate them by module.
+
+Example:
+
+```text
+Current module
+- path/to/file.vue
+  - reason
+
+Installed module X
+- path/to/service.ts
+  - reason
+
+Shared module Y
+- path/to/component.vue
+  - reason
+```
+
+Clearly distinguish between:
+
+- files that definitely require modification;
+- files that probably require modification;
+- files that only need to be referenced/reused;
+- files inspected but which should remain unchanged.
+
+---
+
+## 5. Proposed Frontend Architecture
+
+Describe the recommended technical flow.
+
+For example:
+
+```text
+External menu `import-catasto`
+        ↓
+route
+        ↓
+Catasto Massivo page
+        ↓
+existing Comune autocomplete
+        ↓
+dictionary_councils
++ administrative_tree=true
+        ↓
+selected Comune
+        ↓
+PUT import API
+        ↓
+importId
+        ↓
+poll progress API
+        ↓
+update conventional progress UI
+```
+
+Explain the exact responsibilities at each level.
+
+---
+
+## 6. Page State / Lifecycle
+
+Describe the recommended states, for example:
+
+```text
+initial
+↓
+Comune selected
+↓
+starting import
+↓
+import running
+↓
+progress updates
+↓
+completed / error
+```
+
+Explain:
+
+- button state;
+- loading state;
+- polling start;
+- polling stop;
+- error handling;
+- component destruction/navigation cleanup.
+
+Do not write implementation code.
+
+---
+
+## 7. API Integration Plan
+
+For each API involved, specify:
+
+- method;
+- URL;
+- parameters;
+- response model;
+- existing service/client that should handle it;
+- any types/models that may need to be extended.
+
+Explicitly verify the mapping:
+
+```text
+cadastral_dataset -> regione
+province_code      -> provincia
+council_code       -> comune
 ```
 
 ---
 
-### Step 5 — Add mock data service
+## 8. UI / Reusable Component Recommendation
 
-Since backend APIs are not ready, create a minimal mock function.
+Identify exactly which existing `abc-*` or project-standard components should be reused.
 
-Example responsibility:
+Recommend the simplest conventional UI for:
 
-```ts
-getFiliereMock()
-```
+- Comune selection;
+- start action;
+- loading;
+- fogli progress;
+- particelle progress;
+- discarded counts;
+- `errorLog`;
+- success/error status.
 
-Return a list of fake filiere.
-
-Do not over-engineer it.
-
----
-
-### Step 6 — Add search/filter panel
-
-Use the same search button/panel style shown in the screenshots.
-
-Minimum useful filters:
-
-```txt
-ID
-Codice
-Coltura
-Capo Filiera
-```
-
-Add more only if easy and consistent.
+Do not redesign established project patterns unnecessarily.
 
 ---
 
-### Step 7 — Add row selection/actions
+## 9. Risks / Open Questions
 
-When user selects a row, provide actions:
+List only genuine unresolved items.
 
-```txt
-Edit
-Delete
-View contracts
-```
+For example:
 
-For now, these can navigate or be placeholders if backend/details are not ready.
+- polling interval still undefined;
+- final menu display label may still need confirmation;
+- exact error response contract may need confirmation;
+- `reqId` workflow intentionally postponed.
 
----
-
-### Step 8 — Add create/edit form
-
-Create form with:
-
-```txt
-Codice filiera
-Descrizione
-Coltura
-Varietà
-Data inizio
-Data fine
-CUAA Capo Filiera
-Capo Filiera
-```
-
-Buttons:
-
-```txt
-Annulla
-Salva filiera
-Salva e inserisci contratti
-```
+Clearly distinguish blockers from non-blocking open decisions.
 
 ---
 
-### Step 9 — Apply frontend validation
+## 10. Recommended Implementation Sequence
 
-Required fields:
+Give me an ordered implementation plan, but **do not execute it**.
 
-```txt
-Codice filiera
-Descrizione
-Coltura
-Data inizio
-CUAA Capo Filiera
-Capo Filiera
+For example:
+
+```text
+Step 1 — ...
+Step 2 — ...
+Step 3 — ...
 ```
 
-Disable save until valid.
+The sequence must respect module ownership and minimize unnecessary changes.
 
 ---
 
-### Step 10 — Apply delete/edit rule
+# Important Analysis Standard
 
-If `numeroContrattiAttivi > 0`:
+Do not give me generic Vue/frontend advice.
 
-```txt
-Delete disabled
-Coltura disabled in edit
-Varietà disabled in edit
-Capo filiera disabled if required
+I need conclusions grounded in the **actual repository and installed module architecture**.
+
+Every important conclusion should reference concrete:
+
+- modules;
+- package names;
+- file paths;
+- components;
+- functions;
+- routes;
+- API services;
+- existing patterns.
+
+If something cannot be confirmed from the codebase, explicitly mark it as:
+
+```text
+Not confirmed
 ```
 
-Show a clear message.
+rather than guessing.
 
 ---
 
-# Ticket 2 — #216643 — Gestione pagina contratti di filiera - FE
+# Attached Material
 
-```md
-# Ticket #216643 — Gestione pagina contratti di filiera - FE
+I will attach:
 
-## Codex Prompt
+1. the latest Catasto Massivo analysis/specification note;
+2. the relevant Simone communication/context if needed.
 
-We need to implement frontend ticket **#216643 - Gestione pagina contratti di filiera - FE**.
-
-The request is to create/manage the contracts page for a specific filiera.
-
-Ticket description:
-- "Gestione nuova pagina dei contratti per una specifica filiera"
-- "lista contratti di una filiera"
-
-Important rules:
-- Do NOT start coding yet.
-- First inspect existing code and explain the current structure.
-- Follow existing table/list/search patterns.
-- Do NOT refactor unrelated code.
-- Do NOT modify existing working logic unless required.
-- Keep the implementation minimal.
-- Reuse existing shared/global components.
-- APIs are not ready, so use mock data/service functions.
-
-Please inspect the existing contracts page shown in screenshots:
-- there is already a "Contratti" table
-- menu contains "Contratti" and "Nuova sezione contratti"
-- existing table has columns like ID, Codice, Tipo, Stato, Data Inizio, Data Fine, Ultimo aggiornamento
-- existing search panel has filters like Tipo, ID, Stato
-
-Analyse:
-1. where this existing contracts page is implemented
-2. how the menu entry is configured
-3. how the table data is loaded
-4. how search/filter panel works
-5. how to create the new filiera-specific contracts page with the smallest safe diff
-6. what can be reused
-
-Do not write code yet.
-```
-
-## Step-by-step implementation after Codex analysis
-
-### Step 1 — Find existing contracts page
-
-Search for labels/routes/components related to:
-
-```txt
-Contratti
-Nuova sezione contratti
-```
-
-Use the current screenshot as UI reference.
+Use the latest analysis note as the functional source of truth and reconcile it with the actual codebase.
 
 ---
 
-### Step 2 — Add or reuse route
-
-This page should show contracts for one selected filiera.
-
-Possible route:
-
-```txt
-/filiere/:filieraId/contracts
-```
-
-But follow the existing routing convention.
-
----
-
-### Step 3 — Create contracts list page
-
-Use existing table style.
-
-Columns should include at least:
-
-```txt
-ID
-Codice Contratto
-Codice Filiera
-Descrizione Filiera
-Coltura
-Varietà
-Tipologia Attori
-Attori Contraenti
-Stato
-Data Inizio
-Data Fine
-Ultimo Aggiornamento
-```
-
-If too many columns are risky, start with the currently visible table columns and extend carefully.
-
----
-
-### Step 4 — Add mock service
-
-Create a minimal mock function:
-
-```ts
-getContractsByFilieraMock(filieraId)
-```
-
-Return fake contracts connected to the selected filiera.
-
----
-
-### Step 5 — Add search/filter panel
-
-Follow the current right-side search panel.
-
-Suggested filters:
-
-```txt
-ID
-Codice
-Tipo
-Stato
-Data Inizio
-Data Fine
-```
-
-Keep behavior consistent with existing table filtering.
-
----
-
-### Step 6 — Add table sorting
-
-Use existing sortable table behavior if already available.
-
-Do not create new sorting logic if shared component already supports it.
-
----
-
-### Step 7 — Add page actions
-
-Needed actions:
-
-```txt
-Create new contract
-Edit contract
-Delete contract
-```
-
-For delete, keep disabled or mocked if backend rule is unknown.
-
----
-
-### Step 8 — Add navigation from filiere page
-
-From Ticket #216641 filiere list, the action:
-
-```txt
-View contracts
-```
-
-should open this page with selected filiera id.
-
----
-
-# Ticket 3 — #216645 — Pagina creazione nuovo contratto per una filiera - FE
-
-```md
-# Ticket #216645 — Pagina creazione nuovo contratto per una filiera - FE
-
-## Codex Prompt
-
-We need to implement frontend ticket **#216645 - Pagina creazione nuovo contratto per una filiera - FE**.
-
-The request is to create the frontend page for creating a new contract for a filiera.
-
-Ticket description:
-- "Creazione di un nuovo contratto per una filiera"
-
-Important rules:
-- Do NOT start coding yet.
-- First inspect the existing codebase.
-- Follow existing project patterns.
-- Do NOT refactor unrelated logic.
-- Keep the implementation minimal and safe.
-- Reuse existing shared/global components.
-- Backend APIs are not ready, so use mock services/data.
-- This should be implemented step by step.
-
-The contract creation page should be aligned with the mockup:
-- selected filiera
-- filiera information box
-- contract data
-- contractor type
-- contractor company CUAA
-- associated contractors table
-- buttons: Annulla, Salva contratto, Salva contratto e aggiungi contraente
-
-Please inspect:
-1. existing form pages in the same module area
-2. existing select/autocomplete components
-3. existing date components
-4. existing validation patterns
-5. existing table component used for associated items
-6. existing page layout used by contracts/filiere pages
-7. where the new route should be added
-8. how this page should be opened from the contracts page or from "Salva e inserisci contratti"
-
-Do not write code yet.
-First return an implementation plan with the smallest safe diff.
-```
-
-## Step-by-step implementation after Codex analysis
-
-### Step 1 — Create route/page shell
-
-Add a route for new contract creation.
-
-Possible route:
-
-```txt
-/filiere/:filieraId/contracts/new
-```
-
-or follow existing convention.
-
----
-
-### Step 2 — Add mock data services
-
-Minimal mock functions:
-
-```ts
-getFiliereMock()
-getFilieraByIdMock(id)
-getActorTypesMock()
-getCompaniesMock()
-saveContractMock(payload)
-```
-
-Do not overbuild.
-
----
-
-### Step 3 — Build initial page layout
-
-Page title:
-
-```txt
-Nuovo contratto
-```
-
-Breadcrumb:
-
-```txt
-Contratti > Nuovo contratto
-```
-
----
-
-### Step 4 — Add filiera selector
-
-If opened from selected filiera, prefill and disable filiera select.
-
-If opened from generic create button, allow selection.
-
-After selection, show info box:
-
-```txt
-Coltura
-Varietà
-Capo filiera
-```
-
----
-
-### Step 5 — Add contract data section
-
-Fields:
-
-```txt
-Codice contratto
-Data inizio contratto
-Data fine contratto
-Descrizione contratto
-```
-
-Validation:
-
-```txt
-Codice required
-Data inizio required
-Data fine required
-Descrizione required
-```
-
----
-
-### Step 6 — Add contractor type and company selection
-
-Fields:
-
-```txt
-Tipologia azienda contraente
-Azienda contraente CUAA
-```
-
-Actor types example:
-
-```txt
-Capo Filiera
-Produttore
-Stoccatore
-Trasformatore
-Distributore
-Intermediario
-```
-
-For now, use mocked dropdown values.
-
----
-
-### Step 7 — Add associated contractors table
-
-Table columns:
-
-```txt
-Tipologia azienda
-Azienda contraente CUAA
-Ragione sociale
-Azioni
-```
-
-Initial empty state:
-
-```txt
-Nessun contraente associato
-Aggiungi almeno un contraente per procedere.
-```
-
----
-
-### Step 8 — Add “Nuovo contraente” action
-
-When user selects type + company, allow adding it to the table.
-
-Rules:
-
-```txt
-Do not allow duplicate company in same contract
-Do not allow empty type
-Do not allow empty company
-Allow removing added contractors
-```
-
----
-
-### Step 9 — Add save buttons
-
-Buttons:
-
-```txt
-Annulla
-Salva contratto
-Salva contratto e aggiungi contraente
-```
-
-Disable save if:
-
-```txt
-contract form invalid
-no contractor added
-```
-
----
-
-### Step 10 — Prepare for future plot-selection ticket
-
-Do not implement ticket #216647 now.
-
-But structure the payload so producer contractors can later be connected to selected appezzamenti.
-
-For now only leave a clear TODO/comment if needed:
-
-```ts
-// TODO #216647: connect producer contractor to appezzamenti selection page
-```
-
-
-
- private headers: AbcHeader[] = [
-        { title: "ID", itemName: "id", sortable: true },
-        { title: "Codice", itemName: "codice", sortable: true },
-        { title: "Descrizione", itemName: "descrizione", sortable: true },
-        { title: "Coltura", itemName: "coltura", sortable: true },
-        { title: "Varieta", itemName: "varieta", sortable: true },
-        { title: "Data Inizio", itemName: "dataInizio", sortable: true },
-        { title: "Data Fine", itemName: "dataFine", sortable: true },
-        { title: "CUAA Capo Filiera", itemName: "cuaaCapoFiliera", sortable: true },
-        { title: "Capo Filiera", itemName: "capoFiliera", sortable: true },
-        { title: "N. Contratti attivi", itemName: "contrattiAttivi", sortable: true },
-    ];
-
-the title of the headers should be i18n labled
-
-so I need you to generate a table haveing for every title
- - proper english translate
- - italian (as they are)
- - a lable (ex: cuaa-repo)
-
+# MANDATORY WORKING RULES
+
+The following rules are mandatory and must govern **all analysis and all implementation recommendations**.
+
+I will append the complete **MANDATORY WORKING RULES** below this section.
+
+# MANDATORY WORKING RULES
+
+- Do NOT make extra changes.
+- Do NOT do unrelated refactors.
+- Do NOT rename, move, or restructure files unless strictly necessary.
+- Do NOT introduce new abstractions unless clearly needed for this exact ticket.
+- Do NOT modify existing working logic unless required by this ticket.
+- Keep the implementation very minimal.
+- Keep the implementation descriptive and maintainable.
+- Keep the implementation fully aligned with the existing logic and patterns already used in this module.
+- Reuse existing company global/shared components and existing project conventions.
+- Avoid speculative improvements.
+- Avoid cleanup changes unrelated to this ticket.
+- This codebase is huge, so safe integration is more important than clever refactoring.
+- If you touch a file, only change what is needed for this ticket.
+- Before coding, first inspect the existing logic and follow the same implementation style already used in nearby files.
+- If multiple implementation options are possible, choose the one with:
+- the smallest safe diff
+- the best consistency with existing code
+- the lowest risk in a large legacy codebase
+- Because the project is very heavy, Codex must not run any npm/pnpm/yarn/build/lint/test commands. It can only suggest the validation commands for the developer to run manually later.
+
+# REQUST FOR PROPMP
+
+# ---- 1 ----
+
+so from what you got give me a clear, understandable and accurate prompt to codex to:
+
+- analyse the code briefly and accuratly
+- to not start code yet
+- on its analyse and solution suggestion, it should consider some points I am attaching with prompt (MANDATORY WORKING RULES)
+- to give me a clear and technical detail about the issue, and the solution(Mentioning the files and functions Involved)
+- I am adding also the screenshots I have already attached here, for more clear detail
+
+# ---- 2 ----
+
+to make a prompt for codex to:
+
+- find out and confirm the issue technically, refrencing the involved files and functions
+- then considering the MANDATORY WORKING RULES that I will provide with prompt to codex, suggest a standard proper fix guied
+- do not start code yet
+- I will attach the screenshots mentioned in the ticket and also the PDF version of the ticket also to codex attached with prompt
+- the prompt should be in MD (markdown) format
+- mention that current branch is clean and made from master, so we may not have some changes we did on previews tickets/threads
