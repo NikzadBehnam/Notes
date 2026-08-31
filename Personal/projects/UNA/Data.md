@@ -32,6 +32,7 @@ una202606@gmail.com / Una202606@Mantova
 https://console.neon.tech/
 una202606@gmail.com / Una202606@Mantova
 
-I did a read-only audit. No code changed.
+ARUBA
+https://managehosting.aruba.it/
 
-Important context: the repo currently has pending changes from earlier work, and several docs/brief files already show as deleted in git. I treated that as current workspace state.
+18775567@aruba.it / (22HZjUY+gmbYSN
