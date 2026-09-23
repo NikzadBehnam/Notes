@@ -1,740 +1,553 @@
-# Catasto Massivo / Import Catasto — Frontend Technical Analysis
+# Codex Investigation Prompt — Ticket #228502
 
-## Objective
+## Context
 
-I need you to perform a **deep technical analysis of the current repository and all relevant installed/interdependent modules** in order to determine exactly **where this new frontend feature belongs and which modules/files are involved**.
+I am assigned as the Frontend developer for:
 
-**Do not implement or modify any code yet.**
+**#228502 — DEMETRA CATASTO BATCH - MODIFICHE FRONTEND**
 
-This is an **analysis and implementation-planning phase only**.
+This ticket belongs to the broader **#215071 — Catasto vs Appezzamenti Vettoriale (WFS)** work and evolves the existing **Import Catasto** functionality.
 
-I will review your findings, involved modules/files, and proposed implementation approach before we start coding.
+I will attach to this prompt:
+- the PDF of ticket **#228502**;
+- the PDF of parent ticket **#215071**;
+- **Analisi_CatastoVsAppezzamenti_v1.0.pdf**;
+- the screenshots attached to #228502, which illustrate the expected UI and behavior.
 
----
+Read and cross-check all attached material carefully before drawing conclusions.
 
-# Important Project Context
-
-This application is divided into multiple frontend/modules/packages.
-
-Some modules are installed as dependencies inside other modules and functionality is often distributed across them.
-
-Therefore, the **most important part of this analysis is NOT to assume that the current repository is the correct place for the whole implementation**.
-
-You must inspect:
-
-- the current module/repository;
-- its installed ABACO/internal modules;
-- relevant package dependencies;
-- route ownership;
-- menu/navigation integration;
-- shared components;
-- API/service layers;
-- existing Back Office features;
-- existing municipality-selection logic;
-- authentication/competency handling;
-- polling implementations;
-- any other dependent module involved in this workflow.
-
-The goal is to determine **exactly which module owns each responsibility** before proposing changes.
+At the end of this prompt I will also provide a section named **MANDATORY WORKING RULES**. Those rules are mandatory and must govern the entire investigation, architectural reasoning, solution proposal, and later implementation steps.
 
 ---
 
-# Additional Update from Simone
+## Ticket understanding to verify
 
-Simone has informed me that he has already created the new menu entry in **Coldiretti DEV**.
+Do not simply assume the summary below is correct. Validate it against the attachments and the existing codebase.
 
-The menu entry is currently named:
+The expected FE evolution appears to be:
 
-```text
-import-catasto
-```
+1. Extend the existing **Import Catasto** page/functionality.
+2. The current implementation already supports the **Comune** level.
+3. Add selectors for:
+   - **Regione**
+   - **Provincia**
+   - existing **Comune**
+4. Manage them hierarchically:
+   - selecting a **Regione** populates its **Province**;
+   - selecting a **Provincia** populates its **Comuni**.
+5. Each level must have its own **Avvia import** action:
+   - Regione import;
+   - Provincia import;
+   - Comune import.
+6. Backend data is expected to expose, according to #228502, information conceptually identified as:
+   - `NOME_ENTITA'`
+   - `ID_LOAD`
+   - `FLAG_PROGRESSO`
+7. When an entity has an `ID_LOAD` and its progress is **in coda** or **in importazione**:
+   - the entity must be shown with gray text in the selector;
+   - it must remain selectable if that is what the ticket/current component behavior requires;
+   - after selection, show the corresponding status message;
+   - disable the import button for that selected level.
+8. When the latest processing status is **terminato con successo** or **terminato con errore**:
+   - render the entity normally;
+   - allow another import;
+   - show the processing summary, following/reusing the behavior that already exists for Comune.
+9. The existing summary is expected to include information such as total, processed, and error entities. Verify the actual implementation and terminology in the repository rather than inventing fields.
 
-Consider this an important piece of information during the analysis.
-
-Do **not** automatically create another menu entry in code.
-
-Instead, investigate what the existing Coldiretti DEV menu configuration means technically.
-
-Determine whether:
-
-- the menu entry is externally/configuration-driven;
-- it already points to a route expected from one of our frontend modules;
-- the current repository must only provide the corresponding route/page;
-- additional local route registration is required;
-- some installed module owns the navigation/router configuration;
-- or any other integration is necessary.
-
-Clearly explain your conclusion.
-
----
-
-# Functional Requirement
-
-I will attach the latest analysis/specification note for this ticket.
-
-Treat that document as the primary functional reference.
-
-The frontend functionality currently required is approximately:
-
-```text
-BACK OFFICE
-    ↓
-import-catasto
-    ↓
-Open dedicated page
-    ↓
-Search/select Comune
-    ↓
-Start cadastral bulk import
-    ↓
-Receive importId
-    ↓
-Poll import progress
-    ↓
-Display import progress/results
-```
-
-The final `requestId` / WFS/intersection-processing phase is **NOT currently part of the implementation scope** because Simone is still defining that part.
-
-Do not design or implement speculative `requestId` behaviour.
+The screenshots should be treated as functional evidence and compared with the actual existing UI.
 
 ---
 
-# Current Frontend Scope
+# Primary objective
 
-Based on the attached analysis note, the current frontend needs to support the following.
+Perform a **deep technical investigation and implementation planning exercise only**.
 
-## 1. Page integration
+## DO NOT WRITE OR MODIFY CODE.
 
-A dedicated Back Office page for the cadastral bulk-import feature.
+Do not apply the feature, create files, edit files, refactor code, install packages, or make implementation changes.
 
-No additional filters are required in the standard yellow toolbar.
-
-Determine:
-
-- which module should contain this page;
-- how comparable Back Office pages are registered;
-- which router/module owns the route;
-- how the externally created `import-catasto` menu entry should resolve to this page.
+Your output must give me enough verified information to implement the feature manually and incrementally afterward.
 
 ---
 
-## 2. Competency / authorization
+# 1. Study the ticket and attachments first
 
-The feature is associated with the competency/module:
+Read all provided ticket PDFs, analysis material, and screenshots.
 
-```text
-CATASTO_BATCH
-```
+Build a precise understanding of:
 
-Investigate the existing competency/authorization conventions.
+- the business requirement;
+- what belongs specifically to FE ticket #228502;
+- what functionality already existed before #228502;
+- what is new;
+- expected selector behavior;
+- expected cascading behavior;
+- expected import-button behavior;
+- expected queued/importing/completed/error behavior;
+- expected statistics/summary behavior;
+- dependencies on backend APIs;
+- anything that is ambiguous or not specified.
 
-Determine whether frontend changes are actually required for this competency or whether menu visibility is already fully handled externally.
+Clearly distinguish:
 
-Reference existing similar Back Office features and their exact implementation patterns.
+- **explicit ticket requirement**;
+- **behavior confirmed by existing code**;
+- **reasonable implementation inference**;
+- **unknown / requires BE confirmation**.
 
----
-
-## 3. Comune selection
-
-We must reuse the same searchable Comune-selection behaviour already used when inserting/creating an **appezzamento**.
-
-Do not propose a new custom selector unless the architecture absolutely requires it.
-
-Find the exact existing implementation:
-
-- module;
-- component;
-- service/API layer;
-- model/type;
-- autocomplete component;
-- relevant functions/computed properties/watchers;
-- any shared `abc-*` components involved.
-
-The Comune API request for this feature must include:
-
-```text
-administrative_tree=true
-```
-
-because this makes the API return the additional fields:
-
-```text
-cadastral_dataset
-province_code
-```
-
-Together with:
-
-```text
-council_code
-```
-
-these values are required to start the import.
-
-Determine the cleanest standard way to reuse or extend the existing Comune-selection implementation without duplicating logic.
+Do not silently turn an assumption into a requirement.
 
 ---
 
-## 4. Start bulk cadastral import
+# 2. Investigate the existing Import Catasto implementation
 
-After selecting a Comune, the frontend calls:
+Search the relevant codebase deeply and identify the current implementation of **Import Catasto**, especially the work previously introduced for the Comune-level functionality.
 
-```http
-PUT /api/v1/aggiornacatasto/regione/{regione}/provincia/{provincia}/comune/{comune}
-```
+Trace the feature end-to-end from the Portal integration down to the module/component/service responsible for the actual page.
 
-The mapping must be:
+Identify, with exact paths and relevant symbols where possible:
 
-```text
-{regione}   -> selectedComune.cadastral_dataset
-{provincia} -> selectedComune.province_code
-{comune}    -> selectedComune.council_code
-```
-
-Example:
-
-```text
-cadastral_dataset = VENETO
-province_code      = PD
-council_code       = A001
-```
-
-becomes:
-
-```http
-PUT /api/v1/aggiornacatasto/regione/VENETO/provincia/PD/comune/A001
-```
-
-Expected success response:
-
-```json
-{
-  "importId": 15
-}
-```
-
-Investigate where this API call should live according to the current application architecture.
-
-Do not simply add HTTP calls directly inside the page if existing project conventions use:
-
-- API clients;
-- repositories;
-- services;
-- composables;
-- stores;
-- shared HTTP wrappers;
-- module-specific API classes;
-- or another established pattern.
-
-Find and reference the correct existing convention.
-
----
-
-## 5. Import progress polling
-
-After receiving the `importId`, the frontend must periodically call:
-
-```http
-GET /api/v1/aggiornacatasto/progress/import/{importId}
-```
-
-Example response:
-
-```json
-{
-  "importId": 15,
-  "reqId": 5,
-  "codComune": "L087",
-  "fogliTotali": 10,
-  "fogliElaborati": 10,
-  "fogliScartati": 0,
-  "particelleTotali": 2487,
-  "particelleElaborate": 2487,
-  "particelleScartate": 0,
-  "errorLog": null
-}
-```
-
-The polling interval is still to be decided.
-
-Search the codebase and installed modules for existing polling implementations.
-
-Pay particular attention to established conventions for:
-
-- timers;
-- API polling;
-- stopping polling;
-- component cleanup/unmount/destroy;
-- navigation away from the page;
-- request errors;
-- retry behaviour;
-- avoiding duplicate timers;
-- avoiding concurrent duplicate polling requests.
-
-Recommend the implementation that best follows existing project conventions.
-
----
-
-## 6. Progress presentation
-
-The frontend must display the useful progress information returned by the API.
-
-At minimum, consider:
-
-```text
-fogliTotali
-fogliElaborati
-fogliScartati
-
-particelleTotali
-particelleElaborate
-particelleScartate
-
-errorLog
-```
-
-The specification intentionally leaves the presentation approach to the frontend.
-
-Before suggesting a new UI, inspect the project for existing conventional/shared UI components.
-
-In particular, investigate whether we already have appropriate:
-
-```text
-abc-*
-```
-
-components for things such as:
-
-- cards;
-- progress indicators;
-- alerts;
+- route;
+- menu configuration;
+- permissions;
+- page/container component;
+- child/UI components;
+- selector components;
+- state/data models;
+- TypeScript interfaces/types;
+- services/API clients;
+- endpoints;
+- request/response mappings;
+- Comune loading logic;
+- administrative-tree usage;
+- import-start logic;
+- validation;
 - loading states;
-- error messages;
-- buttons;
-- autocomplete;
-- information rows;
-- status indicators;
-- empty states;
-- notifications.
-
-Prefer existing standard components and visual patterns over introducing custom implementations.
-
-If progress bars are appropriate, explain whether the existing API provides enough information to calculate them safely.
-
-Do **not** invent an unsupported single overall progress percentage if no business rule exists for combining cadastral sheets and parcels.
-
----
-
-# Backend Validation Behaviour
-
-The PUT API will eventually perform backend checks such as:
-
-- preventing another import for the same Comune while one is already running;
-- limiting the maximum number of simultaneous imports.
-
-These validations belong to the backend.
-
-For the frontend, analyze only:
-
-- how API errors are conventionally handled;
-- where they should be surfaced;
-- whether the API's returned error message can be displayed directly;
-- whether an existing notification/error component should be used.
-
-Do not move backend validation logic into the frontend.
-
----
-
-# Explicitly Out of Scope for Now
-
-The following part must **NOT be implemented or fully designed yet**:
-
-```text
-reqId
-    ↓
-intersection calculation
-    ↓
-WFS polling
-    ↓
-intersection result
-```
-
-The progress API currently returns `reqId`, but Simone has explicitly said that he still needs to define how that final phase should work.
-
-Therefore:
-
-- acknowledge `reqId` in the response model if technically necessary;
-- do not invent an endpoint;
-- do not invent polling behaviour;
-- do not implement intersection processing;
-- do not create speculative UI for it.
-
-Leave this part for a later phase.
-
----
-
-# MOST IMPORTANT ANALYSIS — MODULE OWNERSHIP
-
-Because this project is split across installed modules, I need a very thorough module-level analysis.
-
-Do not assume the current module owns everything.
-
-Trace the feature across the actual dependency architecture.
-
-For every major responsibility, determine the owner:
-
-| Responsibility                               | Module / package to determine |
-| -------------------------------------------- | ----------------------------- |
-| `import-catasto` menu/navigation integration | ?                             |
-| Route registration                           | ?                             |
-| Back Office page                             | ?                             |
-| Competency handling                          | ?                             |
-| Comune autocomplete                          | ?                             |
-| Comune API service                           | ?                             |
-| Shared `abc-*` UI components                 | ?                             |
-| HTTP client/API layer                        | ?                             |
-| Bulk import API                              | ?                             |
-| Progress polling                             | ?                             |
-| Notifications/errors                         | ?                             |
-
-Inspect relevant:
-
-```text
-package.json
-lock files
-workspace configuration
-module aliases
-internal package imports
-installed ABACO dependencies
-router definitions
-menu/navigation integrations
-shared libraries
-API/service folders
-```
-
-If an installed dependency contains the actual implementation source relevant to this feature, inspect it as well.
-
-I specifically want to avoid implementing something in the current module that properly belongs to another ABACO module.
-
----
-
-# Existing Conventions Are Mandatory
-
-This project already contains established architecture and reusable components.
-
-Before proposing any new abstraction, identify whether an existing solution already exists.
-
-Search specifically for similar implementations involving:
-
-- Back Office pages;
-- external/configuration-driven menu entries;
-- competency-controlled pages;
-- Comune autocomplete;
-- `dictionary_councils`;
-- `administrative_tree`;
-- `abc-*` components;
-- async actions;
-- long-running operations;
-- polling;
-- progress displays;
-- API error handling;
-- page lifecycle cleanup.
-
-Reuse established conventions whenever possible.
-
-Do not suggest introducing a new generic component, helper, service, composable, store, or abstraction unless there is a concrete architectural reason and no suitable existing solution.
-
----
-
-# MANDATORY: No Code Changes
-
-At this stage:
-
-**DO NOT implement anything.**
-
-Do not:
-
-- create files;
-- edit files;
-- delete files;
-- refactor code;
-- change configuration;
-- install/update dependencies;
-- change package versions;
-- automatically format files;
-- create routes;
-- create components;
-- add services;
-- create tests.
-
-Only inspect and analyze.
-
----
-
-# Expected Output
-
-Provide the analysis in the following structure.
-
-## 1. Executive Technical Summary
-
-Explain:
-
-- how this feature fits into the current architecture;
-- which module should own the page;
-- which other modules are involved;
-- whether Simone's existing `import-catasto` menu entry requires any additional frontend menu configuration.
-
----
-
-## 2. Module Dependency / Ownership Map
-
-Provide a clear map such as:
-
-```text
-Module A
-  └─ responsibility...
-
-Module B
-  └─ responsibility...
-
-Shared Module C
-  └─ reusable components...
-
-Current repository
-  └─ exact responsibility...
-```
-
-Explain why each responsibility belongs there.
-
----
-
-## 3. Existing Implementations to Reuse
-
-List the relevant existing implementations you found.
-
-For each one provide:
-
-```text
-Module/package
-File path
-Component/class/function
-What it currently does
-Why it is relevant
-How it should be reused
-```
-
-Pay special attention to the existing appezzamento Comune selector.
-
----
-
-## 4. Exact Files Potentially Involved
-
-Separate them by module.
-
-Example:
-
-```text
-Current module
-- path/to/file.vue
-  - reason
-
-Installed module X
-- path/to/service.ts
-  - reason
-
-Shared module Y
-- path/to/component.vue
-  - reason
-```
-
-Clearly distinguish between:
-
-- files that definitely require modification;
-- files that probably require modification;
-- files that only need to be referenced/reused;
-- files inspected but which should remain unchanged.
-
----
-
-## 5. Proposed Frontend Architecture
-
-Describe the recommended technical flow.
-
-For example:
-
-```text
-External menu `import-catasto`
-        ↓
-route
-        ↓
-Catasto Massivo page
-        ↓
-existing Comune autocomplete
-        ↓
-dictionary_councils
-+ administrative_tree=true
-        ↓
-selected Comune
-        ↓
-PUT import API
-        ↓
-importId
-        ↓
-poll progress API
-        ↓
-update conventional progress UI
-```
-
-Explain the exact responsibilities at each level.
-
----
-
-## 6. Page State / Lifecycle
-
-Describe the recommended states, for example:
-
-```text
-initial
-↓
-Comune selected
-↓
-starting import
-↓
-import running
-↓
-progress updates
-↓
-completed / error
-```
-
-Explain:
-
-- button state;
-- loading state;
-- polling start;
-- polling stop;
+- status/progress handling;
+- polling/live-refresh behavior, if any;
+- processing summary/statistics;
+- translations/i18n keys;
 - error handling;
-- component destruction/navigation cleanup.
+- notifications;
+- tests, if present.
 
-Do not write implementation code.
+Do not assume Region and Province should be implemented in a particular way until you understand how Comune currently works.
+
+Also investigate the history/current structure related to the earlier Import Catasto FE implementation where useful, but do not change Git state or perform destructive Git operations.
 
 ---
 
-## 7. API Integration Plan
+# 3. Search `C:\ABC\portal` for reusable geographic APIs
 
-For each API involved, specify:
+A specific part of this investigation is to inspect:
 
-- method;
-- URL;
+`C:\ABC\portal`
+
+Search the Portal repository and installed/internal modules for existing APIs, services, composables/helpers, types, or components that already retrieve or manage:
+
+- Regions / `Regioni`;
+- Provinces / `Province`;
+- Municipalities / `Comuni`;
+- administrative tree data;
+- cadastral administrative data.
+
+We are currently waiting for Jerry to provide the **correct and updated APIs** intended for #228502.
+
+Until that information arrives, investigate whether the existing Portal ecosystem already contains suitable Region/Province/Comune APIs that could be used to begin the implementation and later be reconfigured/adapted to the updated APIs.
+
+### Important
+
+Do **not** choose an API just because its name appears suitable.
+
+For every candidate API, report:
+
+- exact source file;
+- module/package that owns it;
+- endpoint;
+- HTTP method;
 - parameters;
-- response model;
-- existing service/client that should handle it;
-- any types/models that may need to be extended.
+- response shape/types;
+- where it is currently used;
+- whether it provides the identifiers needed by Import Catasto;
+- whether it provides Region → Province → Comune relationships;
+- whether it contains import-specific fields such as `ID_LOAD` / `FLAG_PROGRESSO`;
+- whether using it temporarily would create coupling or rework;
+- how easily it could later be replaced by Jerry's updated API.
 
-Explicitly verify the mapping:
+If existing APIs provide only geographic hierarchy but **not import status**, state this explicitly.
 
-```text
-cadastral_dataset -> regione
-province_code      -> provincia
-council_code       -> comune
-```
-
----
-
-## 8. UI / Reusable Component Recommendation
-
-Identify exactly which existing `abc-*` or project-standard components should be reused.
-
-Recommend the simplest conventional UI for:
-
-- Comune selection;
-- start action;
-- loading;
-- fogli progress;
-- particelle progress;
-- discarded counts;
-- `errorLog`;
-- success/error status.
-
-Do not redesign established project patterns unnecessarily.
+Prefer existing project conventions and reusable abstractions over introducing duplicate API logic.
 
 ---
 
-## 9. Risks / Open Questions
+# 4. Investigate related Catasto APIs
 
-List only genuine unresolved items.
+Search the codebase for all existing Catasto/import endpoints and determine what is already available.
 
-For example:
+In particular, establish how the current Comune implementation:
 
-- polling interval still undefined;
-- final menu display label may still need confirmation;
-- exact error response contract may need confirmation;
-- `reqId` workflow intentionally postponed.
+1. obtains/selects a Comune;
+2. builds the administrative identifiers required for import;
+3. starts the import;
+4. receives an import/load/request ID;
+5. determines progress/status;
+6. obtains processing statistics;
+7. renders completed/error results.
 
-Clearly distinguish blockers from non-blocking open decisions.
+Search for relevant concepts and variations such as:
 
----
+- `import-catasto`
+- `catasto`
+- `cadastral`
+- `administrative_tree`
+- `cadastral_dataset`
+- `province_code`
+- `council_code`
+- `req_id`
+- `id_load`
+- `flag_progresso`
+- import progress/status/statistics
 
-## 10. Recommended Implementation Sequence
-
-Give me an ordered implementation plan, but **do not execute it**.
-
-For example:
-
-```text
-Step 1 — ...
-Step 2 — ...
-Step 3 — ...
-```
-
-The sequence must respect module ownership and minimize unnecessary changes.
-
----
-
-# Important Analysis Standard
-
-Do not give me generic Vue/frontend advice.
-
-I need conclusions grounded in the **actual repository and installed module architecture**.
-
-Every important conclusion should reference concrete:
-
-- modules;
-- package names;
-- file paths;
-- components;
-- functions;
-- routes;
-- API services;
-- existing patterns.
-
-If something cannot be confirmed from the codebase, explicitly mark it as:
-
-```text
-Not confirmed
-```
-
-rather than guessing.
+Do not rely only on these exact strings; follow references and actual data flow.
 
 ---
 
-# Attached Material
+# 5. Determine the likely data model
 
-I will attach:
+Based on the ticket, APIs actually found, and existing implementation, explain what FE data/state will probably be needed for each territorial level.
 
-1. the latest Catasto Massivo analysis/specification note;
-2. the relevant Simone communication/context if needed.
+For example, investigate whether the architecture needs concepts equivalent to:
 
-Use the latest analysis note as the functional source of truth and reconcile it with the actual codebase.
+- available regions;
+- selected region;
+- available provinces;
+- selected province;
+- available municipalities;
+- selected municipality;
+- per-entity import state;
+- selected entity's current/previous load;
+- statistics;
+- loading/error state.
+
+Do not invent final interfaces yet.
+
+Instead, show:
+
+- what can be reused;
+- what likely needs extension;
+- what depends on the new BE contract.
+
+Pay particular attention to whether status should be stored globally, per territorial level, or per returned entity.
 
 ---
 
-# MANDATORY WORKING RULES
+# 6. Analyze cascading state carefully
 
-The following rules are mandatory and must govern **all analysis and all implementation recommendations**.
+Explain how the FE should safely manage:
 
-I will append the complete **MANDATORY WORKING RULES** below this section.
+`Regione → Provincia → Comune`
+
+Investigate the current component patterns and determine what should happen when:
+
+- Region changes;
+- Region is cleared;
+- Province changes;
+- Province is cleared;
+- a child request is still pending while the parent changes;
+- the selected Province/Comune becomes invalid;
+- a busy entity is selected;
+- an import is started;
+- import state changes after a refresh/poll.
+
+Identify possible stale-state or race-condition risks.
+
+The proposed solution must follow existing project conventions and the **MANDATORY WORKING RULES**.
+
+---
+
+# 7. Analyze the status rules
+
+Create a state/behavior matrix based on the ticket and verified implementation.
+
+At minimum investigate:
+
+- no previous/current import;
+- in queue;
+- importing/in progress;
+- completed successfully;
+- completed with error;
+- unknown/unexpected backend status.
+
+For each state describe the expected:
+
+- selector text style;
+- option selectability;
+- import-button state;
+- status message;
+- statistics visibility;
+- possibility of starting another import.
+
+Use the **actual backend enum/value names** if they can be found.
+
+If they cannot be verified, keep the ticket terminology and mark the exact API values as **TBD / BE confirmation required**.
+
+Do not invent enum values.
+
+---
+
+# 8. Compare screenshots with current UI
+
+Use the supplied screenshots as evidence.
+
+Check how closely the existing Import Catasto component already matches them.
+
+Explain what needs to change to reach the illustrated target UI, including:
+
+- Region row;
+- Province row;
+- Comune row;
+- independent import buttons;
+- gray busy options;
+- disabled button state;
+- status label/message;
+- summary area.
+
+Do not introduce a redesign that is not requested.
+
+Follow the existing design system/components and established UI conventions.
+
+---
+
+# 9. Identify impacted files/modules
+
+After the investigation, provide a concrete impact map.
+
+For each likely affected file/module provide:
+
+- exact path;
+- responsibility today;
+- why #228502 affects it;
+- expected type of change;
+- whether the change is certain or conditional on the new APIs.
+
+Separate:
+
+### Definitely involved
+Files directly confirmed by current data flow.
+
+### Probably involved
+Files likely to change based on architecture.
+
+### API-dependent
+Files/areas whose changes depend on Jerry's updated contract.
+
+### Not expected to change
+Relevant nearby modules that were investigated but should remain untouched.
+
+---
+
+# 10. Reuse vs refactor assessment
+
+The ticket explicitly evolves functionality that already exists for Comune.
+
+Determine whether the standard solution should:
+
+- extend the existing implementation directly;
+- extract/generalize reusable behavior for Region/Province/Comune;
+- introduce a small reusable component/model;
+- or retain separate logic because abstraction would add unnecessary complexity.
+
+Do not refactor merely for cleanliness.
+
+Any suggested refactoring must have a concrete benefit for #228502 and comply with the **MANDATORY WORKING RULES**.
+
+---
+
+# 11. Temporary API strategy while waiting for Jerry
+
+We may want to begin development using APIs already available under `C:\ABC\portal`, then replace/reconfigure them when Jerry provides the official updated APIs.
+
+Evaluate this strategy technically.
+
+Provide:
+
+### Option A — existing APIs are sufficiently compatible
+Explain how to isolate them behind the existing service/API layer so the future switch has minimal impact.
+
+### Option B — existing APIs provide hierarchy only
+Explain how Region/Province/Comune selection could be developed/tested while keeping import-status integration clearly separated and pending.
+
+### Option C — existing APIs are incompatible
+Recommend that we do not create a temporary integration if it would result in significant throwaway code or incorrect assumptions.
+
+Choose among these only after inspecting the repository.
+
+The implementation plan should make the API boundary easy to update later.
+
+---
+
+# 12. Produce a step-by-step implementation plan
+
+After completing the analysis, propose a sequence of **small, logical, testable implementation steps**.
+
+We will implement these steps manually **one at a time** in later Codex prompts.
+
+Each step must:
+
+1. have one clear objective;
+2. touch the smallest reasonable scope;
+3. describe exactly what should change;
+4. identify expected files/functions;
+5. define how to test it;
+6. define the expected observable result;
+7. identify information that should be collected before proceeding;
+8. avoid depending on an unverified assumption where possible.
+
+Do not combine the whole ticket into one large implementation step.
+
+A good sequence may resemble the following, but you must adjust it based on the actual repository investigation:
+
+**Step 1 — Establish/verify API and model foundations**
+
+**Step 2 — Add Region data/selection without changing import behavior**
+
+**Step 3 — Add Province cascading behavior**
+
+**Step 4 — Integrate/verify Comune cascading behavior**
+
+**Step 5 — Add/extend independent import actions**
+
+**Step 6 — Integrate entity import-state rendering**
+
+**Step 7 — Handle active-import messages and button disabling**
+
+**Step 8 — Extend completed/error statistics behavior**
+
+**Step 9 — Integrate official updated APIs when available**
+
+**Step 10 — Regression and edge-case verification**
+
+This is only an example. The final plan must come from the codebase.
+
+---
+
+# 13. Testing strategy for incremental development
+
+For every implementation step, tell me exactly how I can verify it before moving to the next one.
+
+Use appropriate techniques such as:
+
+- browser behavior;
+- Network tab;
+- endpoint response inspection;
+- temporary console diagnostics where genuinely useful;
+- Vue/component state inspection;
+- existing automated tests;
+- type checking;
+- lint/build checks.
+
+If an API response is required before the next architectural decision can be made, explicitly stop at that step and tell me:
+
+1. which request to execute;
+2. which response fields to inspect;
+3. what result to send back to Codex;
+4. how each possible result affects the next step.
+
+This development must be evidence-driven rather than implementing all assumptions at once.
+
+---
+
+# 14. Regression scope
+
+Identify existing behavior that must not be broken, especially:
+
+- existing Comune import;
+- current progress handling;
+- current summary/statistics;
+- permission behavior;
+- existing navigation/menu;
+- existing administrative data selection;
+- translations;
+- loading/error feedback.
+
+Also identify any Region/Province changes that could unintentionally alter other modules using the same shared administrative APIs/components.
+
+---
+
+# 15. Required final report format
+
+Return the investigation using this structure:
+
+## A. Executive Summary
+
+## B. Verified Requirements from #228502
+
+## C. Existing Import Catasto Architecture
+
+## D. Current Comune Flow — End-to-End
+
+## E. Region/Province/Comune APIs Found in `C:\ABC\portal`
+
+Include a table:
+
+| Candidate | Endpoint | Current Usage | Data Provided | Import Status Available? | Reusability | Notes |
+|---|---|---|---|---|---|---|
+
+## F. Catasto Import/Progress APIs Found
+
+## G. Ticket vs Existing Implementation — Gap Analysis
+
+## H. Proposed FE Architecture
+
+## I. State and UI Behavior Matrix
+
+## J. Impacted Files and Symbols
+
+## K. Unknowns / Questions for Jerry or BE
+
+## L. Temporary API Strategy
+
+## M. Step-by-Step Implementation Plan
+
+For every step include:
+
+- Objective
+- Files/functions
+- Change
+- Test procedure
+- Expected result
+- Information to capture
+- Preconditions for next step
+
+## N. Regression/Test Checklist
+
+## O. Risks and Edge Cases
+
+## P. Recommended First Implementation Step
+
+---
+
+# Critical constraints
+
+- **Do not start coding.**
+- **Do not modify any file.**
+- **Do not create implementation code.**
+- **Do not perform refactoring.**
+- **Do not install/update dependencies.**
+- **Do not make destructive Git changes.**
+- Investigate first.
+- Cite exact repository paths and symbols whenever possible.
+- Prefer evidence from the actual repository over assumptions.
+- Treat the ticket PDFs, analysis document, and screenshots as authoritative requirements.
+- Clearly mark contradictions or missing information.
+- Do not invent backend behavior.
+- Do not invent API payloads, endpoint paths, response fields, or enum values.
+- Reuse established project patterns whenever feasible.
+- Keep the future replacement/configuration of temporary APIs in mind.
+- The implementation must later proceed **one tested step at a time**.
+- After this analysis, **stop and wait for my instruction before implementing Step 1**.
+
+---
 
 # MANDATORY WORKING RULES
 
@@ -780,3 +593,32 @@ to make a prompt for codex to:
 - I will attach the screenshots mentioned in the ticket and also the PDF version of the ticket also to codex attached with prompt
 - the prompt should be in MD (markdown) format
 - mention that current branch is clean and made from master, so we may not have some changes we did on previews tickets/threads
+
+# ---- 3 ----
+
+I need you to make a very clear and standard codex prompt to describe the issue clearly to the codex.
+what I need from codex is : - it should identify the issue, and report it clearly to me - it should suggest a proper and standard solution for the issue considering the MANDATORY WORKING RULES that I will add at end of prompt - if it needs more data and informations should ask me to provide, else it should implement the suggested solution - I will attach the PDF versions of the ticket (and screenshots if any) with prompt to the codex - and the end of the implementation I need a clear segment by segment report about the issues and the suggested solution implemented
+
+# ---- 4 ----
+
+generate a .md file containing a codex prompt.
+this codex prompt should explain the ticket description, the issue and the expected solution clearly, fully, technically and deeply.
+
+codex should not start coding and implementaions
+
+the fix would be step by step, so after complete analyse codex should provide some steps to fix and implementaion, I will past steps one by one to codex to impelement.
+
+every steps should be logical and testable steps, so after being sure on one step implementaion we can go for next step.
+
+we can use the steps to provide information to another step, for example we can trigger an endpoint, check the response and in decide our next move base on that result, or we can add a console log and base on the resuld we will decide our next move
+
+I have a list of rules name MANDATORY WORKING RULES, the entire analyze, investigation, solution suggestion and implementations should be considered with this rules, that I will provide that list at the end of the prompt.
+
+I will attach the PDF ticket and the screenshot with prompt to the codex
+
+# ---- 5 ----
+
+isColdiretti
+src\modules\farm-registry\components\tiles\registry\FarmRegistryHome.vue
+
+what I did, in this tecket is made some UI refactoring by adding the conventional components and UI implementations in same branch, but still I can see some error on API calls.

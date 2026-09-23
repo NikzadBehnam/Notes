@@ -10,3 +10,7 @@ Branch : Backend
 Branch : Frontend
 
 # -----------
+
+
+I made this test guidance of the BetterAuth Impelementaion.
+I need you to convert it with the specific implementaion of our project, considering the configruations, routs, files and .... we have

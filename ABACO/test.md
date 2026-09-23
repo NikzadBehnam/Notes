@@ -1,48 +1,21 @@
-import { HTTPClient } from "@abaco/web-common/src/HTTP";
-import { PagedResults, PagingParams } from "@abaco/web-common/src/Paging";
-import { CatastoCouncil, CatastoMassivoProgress, CatastoMassivoStartResponse } from "../models/CatastoMassivo";
+# MANDATORY WORKING RULES
 
-export default class CatastoMassivoApi {
-    private http: HTTPClient;
-
-    constructor(http: HTTPClient) {
-        this.http = http;
-    }
-
-    public async getCouncils(filter: string | null, paging: PagingParams): Promise<PagedResults<CatastoCouncil>> {
-        const filters = ["fg_active eq 1"];
-        if (filter) {
-            filters.push(`^council_label like ${filter.toUpperCase()}`);
-        }
-
-        const res = await this.http.get("/sitiagri-rest-api/api_basic/v1/plots/dictionary_councils", {
-            params: {
-                offset: paging.offset,
-                count: paging.count,
-                filter: filters,
-                administrative_tree: true
-            }
-        });
-        return res.data;
-    }
-
-    public async startImport(council: CatastoCouncil): Promise<CatastoMassivoStartResponse> {
-        const province_code = council.province_code;
-        const cadastral_dataset = council.cadastral_dataset;
-        const council_code = council.council_code;
-
-        const url = `/aggiorna-catasto-api/api/v1/aggiornacatasto/regione/${cadastral_dataset} /provincia/${province_code}/comune/${council_code}`;
-        const res = await this.http.put(url, undefined, {
-            params: {
-                download: true,
-                fl_calcola_intersezioni: 1
-            }
-        });
-        return res.data;
-    }
-
-    public async getProgress(importId: number): Promise<CatastoMassivoProgress> {
-        const res = await this.http.get(`/aggiorna-catasto-api/api/v1/aggiornacatasto/progress/import/${importId}`);
-        return res.data;
-    }
-}
+- Do NOT make extra changes.
+- Do NOT do unrelated refactors.
+- Do NOT rename, move, or restructure files unless strictly necessary.
+- Do NOT introduce new abstractions unless clearly needed for this exact ticket.
+- Do NOT modify existing working logic unless required by this ticket.
+- Keep the implementation very minimal.
+- Keep the implementation descriptive and maintainable.
+- Keep the implementation fully aligned with the existing logic and patterns already used in this module.
+- Reuse existing company global/shared components and existing project conventions.
+- Avoid speculative improvements.
+- Avoid cleanup changes unrelated to this ticket.
+- This codebase is huge, so safe integration is more important than clever refactoring.
+- If you touch a file, only change what is needed for this ticket.
+- Before coding, first inspect the existing logic and follow the same implementation style already used in nearby files.
+- If multiple implementation options are possible, choose the one with:
+- the smallest safe diff
+- the best consistency with existing code
+- the lowest risk in a large legacy codebase
+- Because the project is very heavy, Codex must not run any npm/pnpm/yarn/build/lint/test commands. It can only suggest the validation commands for the developer to run manually later.
