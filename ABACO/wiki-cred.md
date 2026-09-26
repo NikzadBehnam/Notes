@@ -100,13 +100,12 @@
 
 # Credential MALTA
 TEST
-username: "admin"
-password: "Welcome_3"
+admin/Welcome_3
+ADMIN_AF / Welcome_1
 https://test-s4f.gov.mt.abacogroup.eu/portal/pest-dashboard-home
 
 DEV
-password: "admin"
-username: "welcome"
+admin/welcome
 https://dev-s4f.gov.mt.abacogroup.eu/portal/login
 
 
@@ -161,10 +160,3 @@ dictionary_workers
 # gitlab
 n.behnam@abacogroup.eu
 Beh@1993
-
-
-
-
-
-
-

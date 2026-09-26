@@ -1,204 +1,204 @@
 variables:
-    ABACOFARMER_DEV_NAMESPACE: "abacofarmer-dev"
+  ABACOFARMER_DEV_NAMESPACE: "abacofarmer-dev"
 
 .prepare-cache: &prepare-cache-def
-    stage: build
-    cache:
-        key:
-            files:
-                - package-lock.json
-        policy: pull-push
-        paths:
-            - ./node_modules
-    script:
-        - npm ci
+  stage: build
+  cache:
+    key:
+      files:
+        - package-lock.json
+    policy: pull-push
+    paths:
+      - ./node_modules
+  script:
+    - npm ci
 
 .build: &build-def
-    stage: build
-    cache:
-        key:
-            files:
-                - package-lock.json
-        policy: pull
-        paths:
-            - ./node_modules
-    artifacts:
-        expire_in: 96 hrs
-        paths:
-            - $CI_PROJECT_DIR/dist/$MODE
-    script:
-        # - npm ci
-        - NODE_ENV=production npm run lint
-        - npm dedupe
-        - "cp ./themes/${MODE}.scss ./src/assets/styles/themes/ || :"
-        - "rm $CI_PROJECT_DIR/dist/$MODE/general-config.json || true" #02-12-2023 Add "|| true" to make process not fail at this point
-        - NODE_OPTIONS=--max-old-space-size=14334 ./node_modules/.bin/vue-cli-service build --mode $MODE --report
+  stage: build
+  cache:
+    key:
+      files:
+        - package-lock.json
+    policy: pull
+    paths:
+      - ./node_modules
+  artifacts:
+    expire_in: 96 hrs
+    paths:
+      - $CI_PROJECT_DIR/dist/$MODE
+  script:
+    # - npm ci
+    - NODE_ENV=production npm run lint
+    - npm dedupe
+    - "cp ./themes/${MODE}.scss ./src/assets/styles/themes/ || :"
+    - "rm $CI_PROJECT_DIR/dist/$MODE/general-config.json || true" #02-12-2023 Add "|| true" to make process not fail at this point
+    - NODE_OPTIONS=--max-old-space-size=14334 ./node_modules/.bin/vue-cli-service build --mode $MODE --report
 
 .build-image: &build-image-def
-    stage: build-image
-    image:
-        name: gcr.io/kaniko-project/executor:debug
-        entrypoint: [""]
-    rules:
-        - if: '$CI_COMMIT_BRANCH == "master"'
-    script:
-        - mkdir -p /kaniko/.docker
-        - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
-        - mv $CI_PROJECT_DIR/dist $CI_PROJECT_DIR/artifact
-        - mv $CI_PROJECT_DIR/artifact/$MODE $CI_PROJECT_DIR/dist
-        - if [ $MODE = "portal" ];
-          then
-          export NAME=$MODE;
-          export DOCKER_REPO_PREFIX=abaco;
-          else
-          export NAME=portal-$MODE;
-          export DOCKER_REPO_PREFIX=$MODE;
-          fi
-        - export CONTAINER_REGISTRY=$NEXUS_CONTAINER_REGISTRY_URL/$DOCKER_REPO_PREFIX;
-        - export IMAGE_NAME=$NAME:$CI_COMMIT_SHORT_SHA-dev;
-        - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CONTAINER_REGISTRY/$IMAGE_NAME
+  stage: build-image
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+    - mv $CI_PROJECT_DIR/dist $CI_PROJECT_DIR/artifact
+    - mv $CI_PROJECT_DIR/artifact/$MODE $CI_PROJECT_DIR/dist
+    - if [ $MODE = "portal" ];
+      then
+      export NAME=$MODE;
+      export DOCKER_REPO_PREFIX=abaco;
+      else
+      export NAME=portal-$MODE;
+      export DOCKER_REPO_PREFIX=$MODE;
+      fi
+    - export CONTAINER_REGISTRY=$NEXUS_CONTAINER_REGISTRY_URL/$DOCKER_REPO_PREFIX;
+    - export IMAGE_NAME=$NAME:$CI_COMMIT_SHORT_SHA-dev;
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CONTAINER_REGISTRY/$IMAGE_NAME
 
 .build-image-release: &build-image-release-def
-    stage: build-image
-    image:
-        name: gcr.io/kaniko-project/executor:debug
-        entrypoint: [""]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    script:
-        - mkdir -p /kaniko/.docker
-        - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
-        - mv $CI_PROJECT_DIR/dist $CI_PROJECT_DIR/artifact
-        - mv $CI_PROJECT_DIR/artifact/$MODE $CI_PROJECT_DIR/dist
-        - if [ $MODE = "portal" ];
-          then
-          export NAME=$MODE;
-          export DOCKER_REPO_PREFIX=abaco;
-          else
-          export NAME=portal-$MODE;
-          export DOCKER_REPO_PREFIX=$MODE;
-          fi
-        - export CONTAINER_REGISTRY=$NEXUS_CONTAINER_REGISTRY_URL/$DOCKER_REPO_PREFIX;
-        - export IMAGE_NAME=$NAME:$CI_COMMIT_TAG;
-        - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CONTAINER_REGISTRY/$IMAGE_NAME
+  stage: build-image
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+    - mv $CI_PROJECT_DIR/dist $CI_PROJECT_DIR/artifact
+    - mv $CI_PROJECT_DIR/artifact/$MODE $CI_PROJECT_DIR/dist
+    - if [ $MODE = "portal" ];
+      then
+      export NAME=$MODE;
+      export DOCKER_REPO_PREFIX=abaco;
+      else
+      export NAME=portal-$MODE;
+      export DOCKER_REPO_PREFIX=$MODE;
+      fi
+    - export CONTAINER_REGISTRY=$NEXUS_CONTAINER_REGISTRY_URL/$DOCKER_REPO_PREFIX;
+    - export IMAGE_NAME=$NAME:$CI_COMMIT_TAG;
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CONTAINER_REGISTRY/$IMAGE_NAME
 
 security-scan:
-    stage: build
-    # needs:
-    #   - test
-    image:
-        name: docker-registry.fe.abacogroup.eu/aquasec/trivy:latest
-        entrypoint: [""]
-    variables:
-        TRIVY_CACHE_DIR: ".trivycache/"
-    cache:
-        key: "trivy-db"
-        paths:
-            - .trivycache/
-    artifacts:
-        paths:
-            - $CI_PROJECT_DIR/security-scan/
-    script:
-        - trivy --version
-        - mkdir -p .trivycache/
-        - mkdir -p "$CI_PROJECT_DIR/security-scan/"
-        # cache cleanup is needed when scanning images with the same tags, it does not remove the database
-        - time trivy clean --scan-cache
-        - time trivy fs -q --download-db-only
-        - trivy fs --exit-code 0 -f table -o "$CI_PROJECT_DIR/security-scan/results.txt" $CI_PROJECT_DIR
-        - trivy fs --exit-code 1 --severity HIGH $CI_PROJECT_DIR
-    allow_failure: true
-    rules:
-        - if: '$CI_COMMIT_BRANCH == "master"'
+  stage: build
+  # needs:
+  #   - test
+  image:
+    name: docker-registry.fe.abacogroup.eu/aquasec/trivy:latest
+    entrypoint: [""]
+  variables:
+    TRIVY_CACHE_DIR: ".trivycache/"
+  cache:
+    key: "trivy-db"
+    paths:
+      - .trivycache/
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/security-scan/
+  script:
+    - trivy --version
+    - mkdir -p .trivycache/
+    - mkdir -p "$CI_PROJECT_DIR/security-scan/"
+    # cache cleanup is needed when scanning images with the same tags, it does not remove the database
+    - time trivy clean --scan-cache
+    - time trivy fs -q --download-db-only
+    - trivy fs --exit-code 0 -f table -o "$CI_PROJECT_DIR/security-scan/results.txt" $CI_PROJECT_DIR
+    - trivy fs --exit-code 1 --severity HIGH $CI_PROJECT_DIR
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
 
 .chart-push: &chart-push-def
-    stage: helm
-    image:
-        name: $KUBETOOLS_IMAGE
-    script:
-        - helm repo add nexus $NEXUS_REPO --username $NEXUS_USERNAME --password $NEXUS_PASSWORD
-        - helm dependency update $CI_PROJECT_DIR/helm
-        - if [ $MODE = "portal" ];
-          then
-          export NAME=$MODE;
-          export DOCKER_REPO_PREFIX=abaco;
-          else
-          export NAME=portal-$MODE;
-          export DOCKER_REPO_PREFIX=$MODE;
-          fi
-        - if [ $CI_COMMIT_BRANCH = "master" ];
-          then
-          export VER=v0.0.$(date +"%s");
-          export CONTAINER_REGISTRY=localhost:32000/$DOCKER_REPO_PREFIX;
-          export IMAGE_NAME=$NAME:$CI_COMMIT_SHORT_SHA-dev;
-          else
-          export VER=$CI_COMMIT_TAG;
-          export CONTAINER_REGISTRY=$ABACO_CONTAINER_REGISTRY_URL/$DOCKER_REPO_PREFIX;
-          export IMAGE_NAME=$NAME:$CI_COMMIT_TAG;
-          fi
-        - yq e ".image = \"$IMAGE_NAME\"" -i ${CI_PROJECT_DIR}/helm/values.yaml
-        - yq e ".containerRegistry = \"$CONTAINER_REGISTRY\"" -i ${CI_PROJECT_DIR}/helm/values.yaml
-        - yq e ".version = \"${VER}\"" -i ${CI_PROJECT_DIR}/helm/Chart.yaml
-        - yq e ".appVersion = \"${VER}\"" -i ${CI_PROJECT_DIR}/helm/Chart.yaml
-        - yq e ".name = \"${NAME}\"" -i ${CI_PROJECT_DIR}/helm/Chart.yaml
-        - helm package ${CI_PROJECT_DIR}/helm
-        - curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD $NEXUS_REPO --upload-file *.tgz -v
+  stage: helm
+  image:
+    name: $KUBETOOLS_IMAGE
+  script:
+    - helm repo add nexus $NEXUS_REPO --username $NEXUS_USERNAME --password $NEXUS_PASSWORD
+    - helm dependency update $CI_PROJECT_DIR/helm
+    - if [ $MODE = "portal" ];
+      then
+      export NAME=$MODE;
+      export DOCKER_REPO_PREFIX=abaco;
+      else
+      export NAME=portal-$MODE;
+      export DOCKER_REPO_PREFIX=$MODE;
+      fi
+    - if [ $CI_COMMIT_BRANCH = "master" ];
+      then
+      export VER=v0.0.$(date +"%s");
+      export CONTAINER_REGISTRY=localhost:32000/$DOCKER_REPO_PREFIX;
+      export IMAGE_NAME=$NAME:$CI_COMMIT_SHORT_SHA-dev;
+      else
+      export VER=$CI_COMMIT_TAG;
+      export CONTAINER_REGISTRY=$ABACO_CONTAINER_REGISTRY_URL/$DOCKER_REPO_PREFIX;
+      export IMAGE_NAME=$NAME:$CI_COMMIT_TAG;
+      fi
+    - yq e ".image = \"$IMAGE_NAME\"" -i ${CI_PROJECT_DIR}/helm/values.yaml
+    - yq e ".containerRegistry = \"$CONTAINER_REGISTRY\"" -i ${CI_PROJECT_DIR}/helm/values.yaml
+    - yq e ".version = \"${VER}\"" -i ${CI_PROJECT_DIR}/helm/Chart.yaml
+    - yq e ".appVersion = \"${VER}\"" -i ${CI_PROJECT_DIR}/helm/Chart.yaml
+    - yq e ".name = \"${NAME}\"" -i ${CI_PROJECT_DIR}/helm/Chart.yaml
+    - helm package ${CI_PROJECT_DIR}/helm
+    - curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD $NEXUS_REPO --upload-file *.tgz -v
 
 .k8s-deploy: &k8s-deploy-def
-    stage: deploy-dev
-    image:
-        name: $KUBETOOLS_IMAGE
-    script:
-        - mkdir -p ~/.kube
-        - echo -n "$KUBE_CONFIG" > ~/.kube/config && chmod -R 700 ~/.kube
-        - helm repo add nexus $NEXUS_REPO --username $NEXUS_USERNAME --password $NEXUS_PASSWORD
-        - helm repo update
-        - if [ $MODE = $CI_PROJECT_NAME ];
-          then
-          export NAME=$CI_PROJECT_NAME;
-          export VALUES_FILE=$CI_PROJECT_DIR/k8s/values-dev.yaml;
-          else
-          export NAME=$CI_PROJECT_NAME-$MODE;
-          export VALUES_FILE=$CI_PROJECT_DIR/k8s/values-dev-$MODE.yaml;
-          fi
-        - helm upgrade --install ${NAME} --version=$VER nexus/${NAME} -f $VALUES_FILE -n $NAMESPACE --wait --timeout 5m
+  stage: deploy-dev
+  image:
+    name: $KUBETOOLS_IMAGE
+  script:
+    - mkdir -p ~/.kube
+    - echo -n "$KUBE_CONFIG" > ~/.kube/config && chmod -R 700 ~/.kube
+    - helm repo add nexus $NEXUS_REPO --username $NEXUS_USERNAME --password $NEXUS_PASSWORD
+    - helm repo update
+    - if [ $MODE = $CI_PROJECT_NAME ];
+      then
+      export NAME=$CI_PROJECT_NAME;
+      export VALUES_FILE=$CI_PROJECT_DIR/k8s/values-dev.yaml;
+      else
+      export NAME=$CI_PROJECT_NAME-$MODE;
+      export VALUES_FILE=$CI_PROJECT_DIR/k8s/values-dev-$MODE.yaml;
+      fi
+    - helm upgrade --install ${NAME} --version=$VER nexus/${NAME} -f $VALUES_FILE -n $NAMESPACE --wait --timeout 5m
 
 .package-create: &package-create-def
-    stage: package
-    artifacts:
-        name: $NAME
-        expire_in: 96 hrs
-        paths:
-            - $CI_PROJECT_DIR
-    image: ubuntu
-    script:
-        - if [ -d "$CI_PROJECT_DIR/package/$MODE" ];
-          then
-          cp -a $CI_PROJECT_DIR/package/$MODE/* $CI_PROJECT_DIR/dist/$MODE/;
-          fi
-        - cd ..
-        - mkdir ./dist
-        - mv $CI_PROJECT_DIR/dist/$MODE/* ./dist
-        - cd $CI_PROJECT_DIR
-        - rm -rf ..?* .[!.]* *
-        - mv ../dist/* $CI_PROJECT_DIR/
-        - rm $CI_PROJECT_DIR/
+  stage: package
+  artifacts:
+    name: $NAME
+    expire_in: 96 hrs
+    paths:
+      - $CI_PROJECT_DIR
+  image: ubuntu
+  script:
+    - if [ -d "$CI_PROJECT_DIR/package/$MODE" ];
+      then
+      cp -a $CI_PROJECT_DIR/package/$MODE/* $CI_PROJECT_DIR/dist/$MODE/;
+      fi
+    - cd ..
+    - mkdir ./dist
+    - mv $CI_PROJECT_DIR/dist/$MODE/* ./dist
+    - cd $CI_PROJECT_DIR
+    - rm -rf ..?* .[!.]* *
+    - mv ../dist/* $CI_PROJECT_DIR/
+    - rm $CI_PROJECT_DIR/
 
 stages:
-    - build
-    - build-image
-    - helm
-    - deploy-dev
-    - package
+  - build
+  - build-image
+  - helm
+  - deploy-dev
+  - package
 
 image: "$ABACO_CONTAINER_REGISTRY_URL/abaco/node-compiler:1.3.0"
 
 prepare-cache:
-    <<: *prepare-cache-def
-    tags:
-        - aws
-    # rules:
-    #     - if: "$CI_COMMIT_TAG"
+  <<: *prepare-cache-def
+  tags:
+    - aws
+  # rules:
+  #     - if: "$CI_COMMIT_TAG"
 
 # prepare-cache-abaco:
 #     <<: *prepare-cache-def
@@ -257,103 +257,114 @@ prepare-cache:
 # MODE: "cap-ra"
 
 build-coldiretti:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti"
 
 build-coldiretti-asnacodi:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-asnacodi"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-asnacodi"
 
 build-coldiretti-birra:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-birra"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-birra"
 
 build-coldiretti-demo:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-demo"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-demo"
 
 build-coldiretti-direct:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-direct"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-direct"
 
 build-coldiretti-ibf:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-ibf"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-ibf"
 
 build-coldiretti-smartagri:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-smartagri"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-smartagri"
 
 build-coldiretti-unaprol:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-unaprol"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-unaprol"
 
 build-coldiretti-ont-demetra:
-    <<: *build-def
-    needs:
-        - prepare-cache
-    tags:
-        - aws
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-ont-demetra"
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-ont-demetra"
+
+build-coldiretti-bluarancio:
+  <<: *build-def
+  needs:
+    - prepare-cache
+  tags:
+    - aws
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-bluarancio"
 
 # build-ferrero-outgrower:
 # <<: *build-def
@@ -547,67 +558,74 @@ build-coldiretti-ont-demetra:
 # IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/cap-ra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti:
-    <<: *build-image-release-def
-    needs: [build-coldiretti]
-    variables:
-        MODE: "coldiretti"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti]
+  variables:
+    MODE: "coldiretti"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti-asnacodi:
-    <<: *build-image-release-def
-    needs: [build-coldiretti-asnacodi]
-    variables:
-        MODE: "coldiretti-asnacodi"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-asnacodi/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti-asnacodi]
+  variables:
+    MODE: "coldiretti-asnacodi"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-asnacodi/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti-birra:
-    <<: *build-image-release-def
-    needs: [build-coldiretti-birra]
-    variables:
-        MODE: "coldiretti-birra"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-birra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti-birra]
+  variables:
+    MODE: "coldiretti-birra"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-birra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti-demo:
-    <<: *build-image-release-def
-    needs: [build-coldiretti-demo]
-    variables:
-        MODE: "coldiretti-demo"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-demo/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti-demo]
+  variables:
+    MODE: "coldiretti-demo"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-demo/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti-direct:
-    <<: *build-image-release-def
-    needs: [build-coldiretti-direct]
-    variables:
-        MODE: "coldiretti-direct"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-direct/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti-direct]
+  variables:
+    MODE: "coldiretti-direct"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-direct/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti-ibf:
-    <<: *build-image-release-def
-    needs: [build-coldiretti-ibf]
-    variables:
-        MODE: "coldiretti-ibf"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-ibf/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti-ibf]
+  variables:
+    MODE: "coldiretti-ibf"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-ibf/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti-smartagri:
-    <<: *build-image-release-def
-    needs: [build-coldiretti-smartagri]
-    variables:
-        MODE: "coldiretti-smartagri"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-smartagri/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti-smartagri]
+  variables:
+    MODE: "coldiretti-smartagri"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-smartagri/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti-unaprol:
-    <<: *build-image-release-def
-    needs: [build-coldiretti-unaprol]
-    variables:
-        MODE: "coldiretti-unaprol"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-unaprol/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti-unaprol]
+  variables:
+    MODE: "coldiretti-unaprol"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-unaprol/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 build-image-release-coldiretti-ont-demetra:
-    <<: *build-image-release-def
-    needs: [build-coldiretti-ont-demetra]
-    variables:
-        MODE: "coldiretti-ont-demetra"
-        IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-ont-demetra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *build-image-release-def
+  needs: [build-coldiretti-ont-demetra]
+  variables:
+    MODE: "coldiretti-ont-demetra"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-ont-demetra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+
+build-image-release-coldiretti-bluarancio:
+  <<: *build-image-release-def
+  needs: [build-coldiretti-bluarancio]
+  variables:
+    MODE: "coldiretti-bluarancio"
+    IMAGE_NAME: $NEXUS_CONTAINER_REGISTRY_URL/coldiretti-bluarancio/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 # build-image-release-geo-ai:
 # <<: *build-image-release-def
@@ -757,94 +775,105 @@ build-image-release-coldiretti-ont-demetra:
 # IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/cap-ra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti-birra:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti-birra]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-birra"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-birra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-birra]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-birra"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-birra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti-demo:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti-demo]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-demo"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-demo/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-demo]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-demo"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-demo/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti-direct:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti-direct]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-direct"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-direct/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-direct]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-direct"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-direct/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti-asnacodi:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti-asnacodi]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-asnacodi"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-asnacodi/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-asnacodi]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-asnacodi"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-asnacodi/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti-ibf:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti-ibf]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-ibf"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-ibf/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-ibf]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-ibf"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-ibf/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti-smartagri:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti-smartagri]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-smartagri"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-smartagri/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-smartagri]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-smartagri"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-smartagri/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti-unaprol:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti-unaprol]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-unaprol"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-unaprol/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-unaprol]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-unaprol"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-unaprol/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 chart-push-release-coldiretti-ont-demetra:
-    <<: *chart-push-def
-    needs: [build-image-release-coldiretti-ont-demetra]
-    rules:
-        - if: "$CI_COMMIT_TAG"
-    variables:
-        MODE: "coldiretti-ont-demetra"
-        NEXUS_REPO: $HELM_NEXUS_REPOSITORY
-        IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-ont-demetra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-ont-demetra]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-ont-demetra"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-ont-demetra/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+
+chart-push-release-coldiretti-bluarancio:
+  <<: *chart-push-def
+  needs: [build-image-release-coldiretti-bluarancio]
+  rules:
+    - if: "$CI_COMMIT_TAG"
+  variables:
+    MODE: "coldiretti-bluarancio"
+    NEXUS_REPO: $HELM_NEXUS_REPOSITORY
+    IMAGE_NAME: $ABACO_CONTAINER_REGISTRY_URL/coldiretti-bluarancio/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+
 # chart-push-release-geo-ai:
 # <<: *chart-push-def
 # needs: [build-image-release-geo-ai]

@@ -1,4 +1,4 @@
-*Branch DEMO* git checkout -b branch/151.1.3-bis-coldiretti v151.1.3
+*Branch DEMO* git checkout -b branch/140.3.18-malta v140.3.16
 
 # RELEASE A PATCH FOR A FIX ON AN OLDER VERSION OF A MODULE
     1- [] Do the fix on the latest/master of the module
@@ -17,41 +17,41 @@
 1. Branching
 
 - [] Determine the correct branch:
-  - [] Latest Version: Working on `master`.
+  - [+] Latest Version: Working on `master`.
   - [] Older Version: Create a new branch from the specific tag (e.g., `git checkout -b branch/0.1.2-1 v0.1.2`).
     - git checkout -b branch/147.0.5-coldiretti master
 
 1. Synchronize Environment
-- [] Fetch latest changes from the remote: `git fetch`
-- [] Pull the latest code: `git pull`
+- [+] Fetch latest changes from the remote: `git fetch`
+- [+] Pull the latest code: `git pull`
 - [] Install dependencies from lock file: `npm ci` 
 
 1. Update Dependencies
 
 - [] Choose update method:
-  -[] Latest Version (`master`):
-    -[+] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
-    -[+] Run `npm i` to install updated packages.
+  -[+] Latest Version (`master`):
+    -[] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
+    -[] Run `npm i` to install updated packages.
   - [] Older Version:
     - [] Manually update specific module versions as detailed in the tickets.
     - [] point the local server to proper one, in portal vue.config.js
     - [] Run `npm i` to install updated packages.
 
 1. Local Testing
-  -[+] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
-  -[+] Copy the theme `.scss` file to `src/assets/styles/themes`.
+  -[] point the local server to COLLAUDOBLUARANCIO / TESTBLUARANCIO in vue.configue.js
+  -[] Copy the theme `.scss` file to `src/assets/styles/themes`.
       - https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/blob/master/themes/coldiretti-demo.scss?ref_type=heads
-  -[+] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
-  -[+] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
-  -[+] *⚠️ Remove the theme file before committing*.
-  -[+] Run the linter to check for code quality issues: `npm run lint`.
-  -[+] Open the portal in a browser and confirm it loads without errors.
+  -[] edit the file `C:\ABC\portal\.gitlabnpyml` to trigger the build automatically only for coldiretti (COMMIT OTHER PORTALS WHICH ARE NOT RELATED TO COLDIRETTI)
+  -[] Serve the whitelabel version: `npm run serve-coldiretti-demo`.
+  -[] *⚠️ Remove the theme file before committing*.
+  -[] Run the linter to check for code quality issues: `npm run lint`.
+  -[] Open the portal in a browser and confirm it loads without errors.
 
 
 1. Commit, Push, and Tag
-- [+] Commit all changes, "Update packages"
-- [+] Push the changes to the remote repository.
-- [+] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
+- [] Commit all changes, "Update packages"
+- [] Push the changes to the remote repository.
+- [] If on `master`: Pause the CI/CD pipeline for the initial push containing only package updates.
 - [] Create and push a new release tag (e.g., `v1.2.3`).
   - "`npm version patch`" for bugfixes, "`npm version minor`" for features, "`npm version major`"
     - if you were needed to change the tag manually in package.json remember to change it also in package-lock
@@ -140,26 +140,23 @@ OLD way of updatind the backup.zip (NOT WORKING)
   - [] once the dev pipline passed successfully start the test and then finaly the live
 
 # ----------
-pipeline per il i18n v151.0.10 partita
+pipeline per il i18n v154.0.0 partita
+https://gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/191037
 
 
-La pipeline per il portal v151.1.10 partita (Coldiretti) 
-https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/186387
+La pipeline per il portal v154.0.3 partita (Coldiretti)
+https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/192005
+
 
 Tickets:
-https://abacogroup.easyredmine.com/issues/224791
-
-# ----------
-
-Rilasciato portal v151.2.0  (Coldiretti)
-Rilasciato i18n v151.0.11
-
-Tickets
-
-https://abacogroup.easyredmine.com/issues/222058
-https://abacogroup.easyredmine.com/issues/225676
-https://abacogroup.easyredmine.com/issues/224670
-https://abacogroup.easyredmine.com/issues/226450
+https://abacogroup.easyredmine.com/issues/228189
+https://abacogroup.easyredmine.com/issues/227856
 
 
 
+to update the tikcet sprint 154
+
+Rilasciato il portale 154.0.3, inclusa la fix per il tickets:
+
+https://abacogroup.easyredmine.com/issues/228189
+https://abacogroup.easyredmine.com/issues/227856
