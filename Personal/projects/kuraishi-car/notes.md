@@ -6,11 +6,13 @@ Bug fixes
 - both menus, the primary and secodary does not have active state
 - export a good quality image of the barcode to use in different branding documents
 
-Branch : Backend
+Branch : backend-BetterAuth
 Branch : Frontend
 
 # -----------
 
+- In case if the user is already registered, there is no warning but the verification error is not sending
+- fix Administrator access required model
 
-I made this test guidance of the BetterAuth Impelementaion.
-I need you to convert it with the specific implementaion of our project, considering the configruations, routs, files and .... we have
+Admin:
+admin@kuraishicars.com/KuraishiAdmin123!

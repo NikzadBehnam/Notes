@@ -41,6 +41,7 @@ Use these prompts in order, one prompt per Codex turn. Do not paste all prompts 
 You are working in the Kuraishi Car Dealer repository. Before changing any code, perform a complete authentication-readiness audit.
 
 Confirmed target stack:
+
 - Next.js App Router and TypeScript
 - pnpm
 - latest stable Better Auth compatible with this project
@@ -51,6 +52,7 @@ Confirmed target stack:
 - Vercel production URL: https://kuraishi-car-dealer.vercel.app
 
 Authentication requirements:
+
 - Public email/password registration
 - Email verification required before email/password login
 - Login, logout, persistent sessions, and Remember Me
@@ -62,6 +64,7 @@ Authentication requirements:
 - First ADMIN must be created by an idempotent seed script
 
 Mandatory documentation-first workflow:
+
 1. Inspect package.json, pnpm-lock.yaml, Next.js configuration, TypeScript configuration, source structure, auth pages/forms/schemas, route groups, admin layouts, middleware/proxy, environment examples, and any existing database/auth code.
 2. Determine the exact installed Next.js and React versions from the lockfile. Do not assume that `latest` in package.json tells you the installed version.
 3. Review the current official documentation before making recommendations:
@@ -75,6 +78,7 @@ Mandatory documentation-first workflow:
 5. Do not use blogs or old tutorials when official documentation covers the subject.
 
 Tasks:
+
 - Confirm whether the repository is ready for Prisma 7 and Better Auth.
 - Identify conflicts, obsolete patterns, missing files, existing mock authentication behaviour, and migration risks.
 - Identify the exact files likely to be created or modified in every later step.
@@ -83,6 +87,7 @@ Tasks:
 - Pay particular attention to Prisma 7 driver-adapter requirements, ESM requirements, Next.js `proxy.ts` versus `middleware.ts`, and secure server-side admin authorization.
 
 Output:
+
 - Current repository findings with file references
 - Installed versions
 - Risks and conflicts
@@ -99,6 +104,7 @@ Do not install packages or modify files in this step. Stop after the audit.
 Implement only the dependency-installation step for the Kuraishi authentication stack.
 
 Before changing package.json or pnpm-lock.yaml:
+
 1. Inspect the repository and the findings from the previous audit.
 2. Read the latest official Better Auth Prisma adapter documentation and Prisma 7 documentation:
    - https://better-auth.com/docs/adapters/prisma
@@ -109,6 +115,7 @@ Before changing package.json or pnpm-lock.yaml:
 4. Follow the current official package names. Do not blindly copy package names or commands from this prompt if the official docs changed.
 
 Requirements:
+
 - Use pnpm only.
 - Install only dependencies needed for Better Auth + Prisma 7 + Neon PostgreSQL + Resend.
 - Do not upgrade unrelated dependencies.
@@ -118,6 +125,7 @@ Requirements:
 - Preserve unrelated package.json scripts.
 
 After installation:
+
 - Show the exact package changes and why each is needed.
 - Run `pnpm install` if needed and verify the lockfile.
 - Run the existing typecheck/lint commands only if this step does not yet require missing generated files; otherwise explain the expected temporary failure precisely.
@@ -132,6 +140,7 @@ Do not configure Prisma or Better Auth yet. Stop after dependency installation a
 Implement only the environment-variable contract for Better Auth, Prisma 7, Neon, Resend, Google OAuth, and the first-admin seed.
 
 Before editing:
+
 1. Review the current official docs:
    - https://better-auth.com/docs/introduction
    - https://better-auth.com/docs/authentication/google
@@ -142,6 +151,7 @@ Before editing:
 3. Never print, copy, or commit real secrets.
 
 Required configuration concepts:
+
 - Neon pooled runtime connection
 - Neon direct migration connection when current Prisma/Neon docs recommend it
 - Better Auth secret
@@ -151,6 +161,7 @@ Required configuration concepts:
 - Seed-admin identity inputs
 
 Tasks:
+
 - Update or create `.env.example` using safe placeholders and useful comments.
 - Ensure secret-bearing local env files are ignored.
 - Add typed runtime validation only if the repository already uses an env-validation pattern, or propose a minimal standard implementation supported by the current stack.
@@ -159,6 +170,7 @@ Tasks:
 - Document how to generate a strong Better Auth secret using the current official recommendation.
 
 Validation:
+
 - Confirm no real credentials are in the diff.
 - Confirm variable names exactly match the current libraries' expectations or the explicit configuration that will consume them.
 - Run relevant formatting/type checks.
@@ -172,11 +184,13 @@ Do not create the Neon database, Prisma schema, auth configuration, or Vercel va
 Guide me through creating and configuring the Neon PostgreSQL database for this repository. This step is documentation and validation only unless authenticated Neon tooling is already explicitly configured in the repository.
 
 Before giving instructions:
+
 1. Review https://neon.com/docs/connect/connect-intro and the latest official Prisma 7 PostgreSQL guidance.
 2. Confirm whether Prisma 7 currently recommends a pooled URL for runtime and a direct URL for migrations with Neon.
 3. If the recommendation changed, use the new recommendation and explain it.
 
 Provide exact instructions for:
+
 - Creating the Neon project and database
 - Choosing a sensible region
 - Finding pooled and direct connection strings
@@ -194,6 +208,7 @@ Do not fabricate connection strings and do not ask me to paste secrets into chat
 Implement the Prisma 7 foundation for the Kuraishi repository, but do not add Better Auth models yet.
 
 Documentation-first requirements:
+
 1. Read the latest official Prisma ORM, Prisma 7 upgrade, PostgreSQL, and Better Auth Prisma adapter documentation:
    - https://www.prisma.io/docs/orm
    - https://www.prisma.io/docs/guides/upgrade-prisma-orm/v7
@@ -203,6 +218,7 @@ Documentation-first requirements:
 3. Follow current official documentation if it differs from old Prisma 6 examples.
 
 Tasks:
+
 - Initialize Prisma for PostgreSQL using pnpm-compatible commands.
 - Configure `prisma/schema.prisma` with the Prisma 7 generator and a project-appropriate generated-client location.
 - Configure `prisma.config.ts` correctly for migrations.
@@ -211,6 +227,7 @@ Tasks:
 - Add useful package scripts for Prisma generate, format, validate, migrations, and production migration deploy without deleting existing scripts.
 
 Validation:
+
 - Run Prisma format, validate, and generate.
 - Run the repository typecheck and lint where applicable.
 - Inspect the diff for generated artifacts that should be ignored or committed according to current Prisma guidance.
@@ -225,11 +242,13 @@ Do not configure Better Auth or run the initial database migration yet. Stop aft
 Implement only the runtime Prisma client for Prisma 7 + Neon in the Next.js application.
 
 Before editing:
+
 1. Review the current Prisma 7 driver-adapter and Next.js guidance, plus https://better-auth.com/docs/adapters/prisma.
 2. Inspect the generated-client output chosen in the previous step and the repository's import aliases.
 3. Confirm the current constructor/API for the PostgreSQL driver adapter. Do not copy a Prisma 6 singleton blindly.
 
 Requirements:
+
 - Use the current Prisma 7 PostgreSQL driver adapter required by the installed version.
 - Use the pooled Neon runtime connection where recommended.
 - Reuse a global client during Next.js development to avoid hot-reload connection multiplication.
@@ -238,6 +257,7 @@ Requirements:
 - Do not create a client per request.
 
 Validation:
+
 - Run Prisma generate, typecheck, and lint.
 - Confirm imports resolve against the actual generated path.
 - Explain serverless/Neon connection behaviour and why the chosen singleton is correct.
@@ -251,11 +271,13 @@ Do not configure Better Auth yet. Stop after the Prisma client is verified.
 Design and implement the Better Auth database schema for this project.
 
 Before editing:
+
 1. Review the current official docs for the Better Auth Prisma adapter, database schema generation, email/password, Google provider, and admin plugin.
 2. Inspect the existing registration and login UI and schemas. Treat the actual UI as the source of truth for user-entered fields.
 3. Inspect the installed Better Auth version and use its current CLI and schema requirements.
 
 Confirmed domain rules:
+
 - Roles: ADMIN, STAFF, CUSTOMER
 - Public registration defaults to CUSTOMER
 - Only ADMIN may access /admin
@@ -267,6 +289,7 @@ Confirmed domain rules:
 - Better Auth owns core auth/session/account/verification fields
 
 Tasks:
+
 - Propose the exact User fields and explain which are core, plugin-generated, and application-specific.
 - Configure Better Auth additional fields/plugins sufficiently for schema generation, using temporary minimal modules if necessary.
 - Generate the Better Auth Prisma models using the current official CLI workflow.
@@ -275,6 +298,7 @@ Tasks:
 - Keep names compatible with the repository's conventions and Prisma 7.
 
 Validation:
+
 - Run Prisma format and validate.
 - Show the resulting model/field summary and important indexes/constraints.
 - Confirm the design supports both credential and Google accounts.
@@ -289,12 +313,14 @@ Stop after schema generation and validation. Clearly list any schema question th
 Create and apply the reviewed initial Prisma migration for the Better Auth schema.
 
 Before running migration commands:
+
 1. Re-read the current Prisma 7 migration documentation and Neon-specific connection recommendations.
 2. Inspect the schema and existing migration history.
 3. Confirm the target is the intended development Neon database without printing credentials.
 4. Show me any destructive or surprising SQL before applying it.
 
 Tasks:
+
 - Create a clearly named initial authentication migration using pnpm/Prisma 7 commands.
 - Inspect the generated SQL for tables, foreign keys, unique constraints, indexes, defaults, and delete behaviour.
 - Apply it only to the confirmed development database.
@@ -302,6 +328,7 @@ Tasks:
 - Do not use `db push` as a substitute for a committed migration unless official/current project policy explicitly requires it.
 
 Validation:
+
 - Run migrate status, Prisma validate, generate, typecheck, and lint.
 - Summarize the database objects created.
 - Confirm the migration file is suitable for source control and production `migrate deploy`.
@@ -315,6 +342,7 @@ Do not add Resend, route handlers, UI integration, or seed users yet. Stop after
 Implement the reusable Resend transactional-email infrastructure for authentication emails only.
 
 Before editing:
+
 1. Review the latest Resend Next.js documentation, domain/sender requirements, error handling, and current free-plan limits:
    - https://resend.com/docs/send-with-nextjs
    - https://resend.com/docs/knowledge-base/account-quotas-and-limits
@@ -322,6 +350,7 @@ Before editing:
 3. Inspect existing email utilities/templates and styling conventions.
 
 Requirements:
+
 - Use the server-side Resend SDK and server-only environment variables.
 - Create a small typed email-sending abstraction.
 - Create separate branded verification and password-reset templates.
@@ -333,6 +362,7 @@ Requirements:
 - If using React Email would add a new dependency, justify it from the current official guidance and project needs before adding it.
 
 Validation:
+
 - Unit-test template generation or the email wrapper without sending a real email.
 - Run typecheck, lint, and relevant tests.
 - Document the one manual Resend/domain setup action still required.
@@ -346,11 +376,13 @@ Do not connect these emails to Better Auth yet. Stop after the email layer is re
 Implement the production-quality Better Auth server configuration using the existing Prisma and email layers.
 
 Before editing:
+
 1. Review the latest official Better Auth docs for options, Prisma adapter, email/password, email verification, Next.js, Google, sessions, cookies, trusted origins, and admin roles.
 2. Confirm the installed Better Auth API signatures. If they differ from examples in this prompt, follow the installed/current official API.
 3. Inspect the schema generated earlier and keep configuration synchronized with it.
 
 Required behaviour:
+
 - Prisma PostgreSQL adapter
 - Email/password enabled
 - Email verification required before credential login
@@ -367,11 +399,13 @@ Required behaviour:
 - Safe account linking between Google and credential accounts according to current Better Auth defaults/guidance
 
 Important:
+
 - Validate registration consent server-side. The public Better Auth signup endpoint must not provide a bypass that creates a noncompliant account. Choose a design supported by current Better Auth hooks/API and explain it.
 - Avoid awaiting email delivery when current Better Auth/serverless guidance recommends background dispatch, but make sure Vercel does not terminate the work. Use the currently recommended mechanism.
 - Do not weaken account enumeration or token security.
 
 Validation:
+
 - Run Prisma generate, typecheck, lint, and focused tests.
 - Explain the complete auth configuration by concern.
 - Identify any behaviour that still depends on a later route/UI step.
@@ -385,11 +419,13 @@ Do not mount the API route or alter forms yet. Stop after the server configurati
 Mount Better Auth in the Next.js App Router and create the browser auth client.
 
 Before editing:
+
 1. Review https://better-auth.com/docs/integrations/next and the current client/plugin docs.
 2. Inspect the actual App Router source root and existing API routes.
 3. Confirm whether this installed version requires any Next.js cookie plugin for the APIs we will use.
 
 Tasks:
+
 - Add the recommended catch-all Better Auth handler under the correct `/api/auth/[...all]` App Router path.
 - Create one reusable client instance using the correct React import.
 - Add only client plugins required by the configured server plugins.
@@ -397,6 +433,7 @@ Tasks:
 - Preserve the repository's aliases and module boundaries.
 
 Validation:
+
 - Confirm GET/POST handler exports match current official docs.
 - Run typecheck, lint, build if practical, and focused route checks.
 - Verify no secrets are bundled into client code.
@@ -411,11 +448,13 @@ Do not modify registration/login UI yet. Stop after handler/client integration.
 Replace the existing UI-only registration flow with real Better Auth email/password registration and required email verification.
 
 Before editing:
+
 1. Review current Better Auth signup and email-verification APIs.
 2. Inspect the existing registration form, Zod schema, shared auth fields, design system, toast conventions, and route structure.
 3. Preserve the existing visual design unless a functional state requires a small addition.
 
 Requirements:
+
 - Submit firstName, lastName, composed display name, email, phone, password, and preferred language as supported by the configured schema.
 - Validate password confirmation and consent before submission.
 - Enforce consent on the server, not only in React/Zod.
@@ -429,6 +468,7 @@ Requirements:
 - Avoid revealing whether an email already exists more than necessary.
 
 Testing:
+
 - Add/update unit/component tests for validation, successful request mapping, provider error, consent rejection, and pending-verification UI.
 - Run typecheck, lint, tests, and build if practical.
 - Manually describe the end-to-end test using a real development inbox.
@@ -442,11 +482,13 @@ Do not implement login, Google, or password reset in this step. Stop after regis
 Replace the mock login with Better Auth credential login and add session/logout support.
 
 Before editing:
+
 1. Review current Better Auth email sign-in, session, React client, Remember Me, and sign-out docs.
 2. Inspect the existing login UI and all navigation/header components where login state appears.
 3. Confirm the exact installed-client method signatures.
 
 Requirements:
+
 - Submit email and password through Better Auth.
 - Map the existing “Remember this device” checkbox to Better Auth's supported session persistence option.
 - Respect `callbackURL` safely for return-to navigation, preventing open redirects.
@@ -458,6 +500,7 @@ Requirements:
 - Keep authorization decisions on the server.
 
 Testing and verification:
+
 - Test successful login, invalid credentials, unverified account, Remember Me true/false, logout, and callback URL validation.
 - Run typecheck, lint, tests, and build.
 - Describe browser checks for cookies and persistence without exposing cookie contents.
@@ -471,12 +514,14 @@ Do not implement Google or password reset yet. Stop after credential session flo
 Implement Google login as the first social provider.
 
 Before editing:
+
 1. Review the latest Better Auth Google documentation:
    https://better-auth.com/docs/authentication/google
 2. Verify current Google Cloud OAuth requirements from official Google documentation linked by Better Auth.
 3. Inspect the existing auth pages for the best design-system-compatible Google button placement.
 
 Requirements:
+
 - Use the configured Better Auth Google provider.
 - Add Google login to the login page and, if UX-consistent, registration page.
 - Use safe callback URLs.
@@ -487,12 +532,14 @@ Requirements:
 - Do not request unnecessary Google scopes.
 
 Also provide a manual Google Cloud setup checklist with exact development and production origins and callback URLs for:
+
 - http://localhost:3000
 - https://kuraishi-car-dealer.vercel.app
 
 Never request that secrets be pasted into chat or committed.
 
 Validation:
+
 - Add focused tests around invoking the Google flow and safe callbacks.
 - Run typecheck, lint, tests, and build.
 - Explain how to diagnose `redirect_uri_mismatch` without exposing credentials.
@@ -506,11 +553,13 @@ Do not implement password reset or admin protection in this step. Stop after Goo
 Implement the complete forgot-password and reset-password flows with Better Auth and Resend.
 
 Before editing:
+
 1. Review the current Better Auth password-reset documentation and exact client APIs.
 2. Review current security guidance on account enumeration, reset-token handling, expiry, and session revocation.
 3. Inspect existing auth shell/form components so the new pages match the project UI.
 
 Requirements:
+
 - Replace the mock “Forgot?” action with navigation to a real page.
 - Forgot-password submission always shows a neutral response regardless of whether the email exists.
 - Use Better Auth's reset request API and Resend callback already configured.
@@ -523,6 +572,7 @@ Requirements:
 - Maintain accessible loading, focus, and error states.
 
 Testing:
+
 - Test request success with neutral messaging, provider failure handling, password mismatch, invalid token, successful reset, and session revocation configuration.
 - Run typecheck, lint, tests, and build.
 - Provide a manual end-to-end email test checklist.
@@ -536,11 +586,13 @@ Do not implement admin protection yet. Stop after password recovery works.
 Implement secure authentication and ADMIN-only authorization for the entire `/admin` area.
 
 Before editing:
+
 1. Review the latest Better Auth Next.js session/protection guidance and admin-plugin documentation.
 2. Review the current Next.js version's official guidance on `proxy.ts` versus `middleware.ts`.
 3. Inspect the actual `/admin` route group/layout, all admin route handlers, server actions, and data mutations.
 
 Security requirements:
+
 - Unauthenticated users are redirected to login with a safe return URL.
 - Authenticated STAFF and CUSTOMER users receive an unauthorized response/page and cannot access admin content.
 - Only ADMIN can access `/admin`.
@@ -552,6 +604,7 @@ Security requirements:
 - Centralize server-side `requireSession`/`requireAdmin` helpers to prevent inconsistent checks.
 
 Tasks:
+
 - Implement the server authorization helpers.
 - Protect the admin layout.
 - Add the appropriate Next.js proxy/middleware only if current docs and project version justify it.
@@ -559,6 +612,7 @@ Tasks:
 - Create an accessible unauthorized page or use appropriate 403 behaviour.
 
 Testing:
+
 - Add authorization tests for anonymous, CUSTOMER, STAFF, and ADMIN.
 - Test direct URLs and direct route/server-action calls, not only navigation.
 - Run typecheck, lint, tests, and build.
@@ -573,11 +627,13 @@ Stop after admin authorization is fully verified.
 Implement a safe, idempotent seed/setup script for the first ADMIN account.
 
 Before editing:
+
 1. Review current Better Auth server/admin APIs and Prisma 7 seeding guidance.
 2. Prefer creating credentials through Better Auth rather than manually hashing passwords or inserting incomplete auth records.
 3. Inspect existing scripts and environment conventions.
 
 Requirements:
+
 - Read email, password, first name, and last name from server-only environment variables.
 - Never hard-code or log the password.
 - Validate required inputs and enforce a strong password.
@@ -590,6 +646,7 @@ Requirements:
 - Add a narrowly named pnpm script.
 
 Testing and verification:
+
 - Test first run, second run, missing variables, and existing non-admin conflict.
 - Run typecheck, lint, tests, and build.
 - Explain exactly how I should run it locally and in a controlled production setup without showing real secrets.
@@ -603,10 +660,12 @@ Stop after the seed script is ready. Do not execute it against production withou
 Prepare the Better Auth + Prisma 7 + Neon + Resend + Google implementation for Vercel deployment.
 
 Before editing:
+
 1. Review the latest official Vercel guidance linked by Next.js/Prisma/Better Auth, current Prisma 7 deployment guidance, Neon connection guidance, Resend domain guidance, and Better Auth production configuration.
 2. Inspect the current build script, Vercel configuration, deployment workflow, and production domain settings.
 
 Tasks:
+
 - Ensure Prisma Client is generated during the build using the repository's pnpm workflow.
 - Define the safe production migration procedure using `prisma migrate deploy`; do not run development migrations during builds unless current project architecture explicitly requires and justifies it.
 - Produce the exact Vercel environment-variable checklist without values.
@@ -618,6 +677,7 @@ Tasks:
 - Add or update deployment documentation.
 
 Validation:
+
 - Run the production build locally.
 - Run Prisma validate/generate and relevant tests.
 - Inspect output for accidental secret exposure or runtime incompatibility.
@@ -632,11 +692,13 @@ Do not deploy or change external Vercel/Google/Neon/Resend settings without expl
 Perform the final security, correctness, and UX audit of the completed Kuraishi authentication implementation. Fix only issues clearly within the implemented authentication scope.
 
 Documentation-first workflow:
+
 1. Re-read current official Better Auth, Prisma 7, Neon, Next.js, Resend, and Google documentation relevant to the installed versions.
 2. Inspect the complete diff and all auth/database/admin files.
 3. If current official guidance conflicts with earlier implementation, identify and correct the outdated behaviour.
 
 Audit areas:
+
 - Dependency compatibility and pinned versions
 - Prisma 7 driver adapter and generated client
 - Migration correctness and production deployability
@@ -657,6 +719,7 @@ Audit areas:
 - Vercel/Neon serverless compatibility
 
 Required verification matrix:
+
 - New credential registration
 - Duplicate registration
 - Unverified credential login
@@ -671,6 +734,7 @@ Required verification matrix:
 - Seed script first and repeated run
 
 Run:
+
 - pnpm typecheck
 - pnpm lint
 - all tests
@@ -679,6 +743,7 @@ Run:
 - any focused security/integration tests added by the project
 
 Output:
+
 - Findings ordered by severity with file references
 - Fixes made
 - Commands and results
