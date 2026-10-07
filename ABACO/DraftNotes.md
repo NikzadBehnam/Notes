@@ -1439,6 +1439,102 @@ Module:widgets-container-module
     Rilasciato i18n
 
 
+# https://abacogroup.easyredmine.com/issues/225654
+
+    BRNACH: feat/227856-warehouse-relabeling-lot-grouping
+    MODULE: assets-module
+
+    Rilasciato assets-module v2.40.16
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/228502
+
+    BRNACH: feat/228502-catasto-batch-region-province-import
+    MODULE: coldiretti-embedded-sections-module
+
+    Rilasciato coldiretti-embedded-sections-module v0.7.2
+    necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/214236
+    BRNACH: feat/214236-seed-monitoring-checklist-print
+    MODULE: widgets-container-module
+
+    Rilasciato widgets-container-module v1.22.8
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/228609
+    BRNACH: feat/228609-pua-duplication
+    MODULE: pua-module
+
+    Rilasciato pua-module v1.13.2
+    necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/228610
+    BRNACH: fix/228610-pua-status-change-restriction
+    MODULE: pua-module
+
+    Rilasciato pua-module v1.13.3
+    necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/226569
+    BRNACH: fix/226569-graphical-display-of-plots
+    MODULE: pua-module
+
+    Rilasciato pua-module 
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/240267
+    BRNACH: fix/filiera-plots-responsive-layout-240267
+    MODULE: agreements-module
+
+    Rilasciato agreements-module v1.3.10
+    necessario aggiornamento i18n
+    Da compilare portal
+
+    ----------    
+
+    BRNACH: fix/filiera-plots-responsive-layout-240267
+    MODULE: portal-global-state
+
+    Rilasciato portal-global-state v2.22.5
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
+# https://abacogroup.easyredmine.com/issues/240003
+    BRNACH: fix/228610-pua-status-change-restriction
+    MODULE: agreements-module
+
+    Rilasciato agreements-module v1.3.11
+    necessario aggiornamento i18n
+    Da compilare portal
+    
+# https://abacogroup.easyredmine.com/issues/240573
+    BRNACH: fix/228610-pua-status-change-restriction
+    MODULE: activities-module
+
+    Rilasciato activities-module v2.69.22
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/240563
+    BRNACH: fix/240563-negative-movement-quantity-validation
+    MODULE: assets-module
+
+    Rilasciato assets-module v2.40.17
+    necessario aggiornamento i18n
+    Da compilare portal
+
+
 # https://abacogroup.easyredmine.com/issues/225566
 
     BRNACH: fix/225566-contract-company-filter-sync
@@ -1457,23 +1553,9 @@ Module:widgets-container-module
     Da compilare portal
 
 
-# https://abacogroup.easyredmine.com/issues/225654
-
-    BRNACH: feat/227856-warehouse-relabeling-lot-grouping
-    MODULE: assets-module
-
-    Rilasciato assets-module v2.40.16
-    non necessario aggiornamento i18n
-    Da compilare portal
 
 
-# https://abacogroup.easyredmine.com/issues/228502
+Note: as this is the 3th time that the ticket is returning, to prevent returning the ticket, suggets any modification on the implementaion
 
-    BRNACH: feat/228502-catasto-batch-region-province-import
-    MODULE: coldiretti-embedded-sections-module
+what are the DS files for the FS004
 
-    Rilasciato coldiretti-embedded-sections-module
-    necessario aggiornamento i18n
-    Da compilare portal
-    
-# ------------  

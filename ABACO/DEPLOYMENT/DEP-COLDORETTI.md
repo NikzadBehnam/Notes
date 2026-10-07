@@ -1,5 +1,11 @@
 *Branch DEMO* git checkout -b branch/140.3.18-malta v140.3.16
 
+IMPORTANT TO READ IN CASE OF RELEASED OLDER THAN 154.0.6
+
+```txt
+ciao, segnalo che grazie al prezioso input di Pietro Benini le pipeline di build del portal son passate da 2 ore e mezza se non più a ~25 minuti. il fix è già sul master, quindi per 154.0.6 e successivi. Nikzad Behnam puoi backportare il fix per release precedenti copiando file src/postss.config.js
+```
+
 # RELEASE A PATCH FOR A FIX ON AN OLDER VERSION OF A MODULE
     1- [] Do the fix on the latest/master of the module
     2- [] Do the fix on the older version of the module. Create a branch from that version
@@ -17,19 +23,19 @@
 1. Branching
 
 - [] Determine the correct branch:
-  - [+] Latest Version: Working on `master`.
+  - [] Latest Version: Working on `master`.
   - [] Older Version: Create a new branch from the specific tag (e.g., `git checkout -b branch/0.1.2-1 v0.1.2`).
     - git checkout -b branch/147.0.5-coldiretti master
 
 1. Synchronize Environment
-- [+] Fetch latest changes from the remote: `git fetch`
-- [+] Pull the latest code: `git pull`
+- [] Fetch latest changes from the remote: `git fetch`
+- [] Pull the latest code: `git pull`
 - [] Install dependencies from lock file: `npm ci` 
 
 1. Update Dependencies
 
 - [] Choose update method:
-  -[+] Latest Version (`master`):
+  -[] Latest Version (`master`):
     -[] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
     -[] Run `npm i` to install updated packages.
   - [] Older Version:
@@ -140,18 +146,20 @@ OLD way of updatind the backup.zip (NOT WORKING)
   - [] once the dev pipline passed successfully start the test and then finaly the live
 
 # ----------
-pipeline per il i18n v154.0.0 partita
-https://gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/191037
+pipeline per il i18n  v154.0.3 partita
+https://gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/195407
 
 
-La pipeline per il portal v154.0.3 partita (Coldiretti)
-https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/192005
+La pipeline per il portal v154.0.9 partita
+https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/195403
 
 
 Tickets:
-https://abacogroup.easyredmine.com/issues/228189
-https://abacogroup.easyredmine.com/issues/227856
-
+https://abacogroup.easyredmine.com/issues/240267
+https://abacogroup.easyredmine.com/issues/228378
+https://abacogroup.easyredmine.com/issues/228708
+https://abacogroup.easyredmine.com/issues/240399
+https://abacogroup.easyredmine.com/issues/225566
 
 
 to update the tikcet sprint 154
