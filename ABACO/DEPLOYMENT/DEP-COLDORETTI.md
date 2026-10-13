@@ -1,4 +1,4 @@
-*Branch DEMO* git checkout -b branch/140.3.18-malta v140.3.16
+*Branch DEMO* git checkout -b branch/v154.0.10-coldiretti v154.0.9
 
 IMPORTANT TO READ IN CASE OF RELEASED OLDER THAN 154.0.6
 
@@ -22,10 +22,11 @@ ciao, segnalo che grazie al prezioso input di Pietro Benini le pipeline di build
 # DEPLOYMENT NEW PORTAL
 1. Branching
 
-- [] Determine the correct branch:
+- [+] Determine the correct branch:
   - [] Latest Version: Working on `master`.
-  - [] Older Version: Create a new branch from the specific tag (e.g., `git checkout -b branch/0.1.2-1 v0.1.2`).
+  - [+] Older Version: Create a new branch from the specific tag (e.g., `git checkout -b branch/0.1.2-1 v0.1.2`).
     - git checkout -b branch/147.0.5-coldiretti master
+    - IN CASE OF RELEASED OLDER THAN 154.0.6 update src/postss.config.js
 
 1. Synchronize Environment
 - [] Fetch latest changes from the remote: `git fetch`
@@ -36,7 +37,7 @@ ciao, segnalo che grazie al prezioso input di Pietro Benini le pipeline di build
 
 - [] Choose update method:
   -[] Latest Version (`master`):
-    -[] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
+    -[+] Run `ncu @abaco/* -u` to update all `@abaco` dependencies.      
     -[] Run `npm i` to install updated packages.
   - [] Older Version:
     - [] Manually update specific module versions as detailed in the tickets.
@@ -147,24 +148,15 @@ OLD way of updatind the backup.zip (NOT WORKING)
 
 # ----------
 pipeline per il i18n  v154.0.3 partita
-https://gitlab.fe.abacogroup.eu/abaco4farmer/i18n-repository/-/pipelines/195407
 
 
-La pipeline per il portal v154.0.9 partita
-https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/195403
+La pipeline per il portal v154.0.10 partita  (Coldiretti)
+https://gitlab.fe.abacogroup.eu/abaco4farmer/portal/-/pipelines/197091
 
 
 Tickets:
-https://abacogroup.easyredmine.com/issues/240267
-https://abacogroup.easyredmine.com/issues/228378
-https://abacogroup.easyredmine.com/issues/228708
-https://abacogroup.easyredmine.com/issues/240399
 https://abacogroup.easyredmine.com/issues/225566
-
-
-to update the tikcet sprint 154
-
-Rilasciato il portale 154.0.3, inclusa la fix per il tickets:
-
-https://abacogroup.easyredmine.com/issues/228189
-https://abacogroup.easyredmine.com/issues/227856
+https://abacogroup.easyredmine.com/issues/240003
+https://abacogroup.easyredmine.com/issues/240400
+https://abacogroup.easyredmine.com/issues/240573
+https://abacogroup.easyredmine.com/issues/240563

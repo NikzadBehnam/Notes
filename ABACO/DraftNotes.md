@@ -1487,7 +1487,7 @@ Module:widgets-container-module
     BRNACH: fix/226569-graphical-display-of-plots
     MODULE: pua-module
 
-    Rilasciato pua-module 
+    Rilasciato pua-module v1.14.0
     necessario aggiornamento i18n
     Da compilare portal
 
@@ -1511,7 +1511,7 @@ Module:widgets-container-module
 
 
 # https://abacogroup.easyredmine.com/issues/240003
-    BRNACH: fix/228610-pua-status-change-restriction
+    BRNACH: fix/240003-filiera-duplicate-code-error
     MODULE: agreements-module
 
     Rilasciato agreements-module v1.3.11
@@ -1519,7 +1519,7 @@ Module:widgets-container-module
     Da compilare portal
     
 # https://abacogroup.easyredmine.com/issues/240573
-    BRNACH: fix/228610-pua-status-change-restriction
+    BRNACH: fix/240573-attività-pianificata-diserbo
     MODULE: activities-module
 
     Rilasciato activities-module v2.69.22
@@ -1540,22 +1540,51 @@ Module:widgets-container-module
     BRNACH: fix/225566-contract-company-filter-sync
     MODULE: supply_chain_view_module
 
-    Rilasciato supply_chain_view_module  1.3.7
+    Rilasciato supply_chain_view_module v1.3.9
     non necessario aggiornamento i18n
     Da compilare portal
 
 
-    BRNACH: fix/226779-contract-company-filter-sync-farm-registry
-    MODULE: farm-registry
+# https://abacogroup.easyredmine.com/issues/240400
 
-    Rilasciato farm-registry 4.11.19
+    BRNACH: fix/240400-exclude-ineligible-team-workers
+    MODULE: assets-module
+
+    Rilasciato assets-module v2.40.18
+    non necessario aggiornamento i18n
+
+
+# https://abacogroup.easyredmine.com/issues/227303
+
+    BRNACH: fix/227303-crop-variety-area-widgets-initial-load
+    MODULE: crop-plan-module
+
+    Rilasciato crop-plan-module v2.52.2
+    non necessario aggiornamento i18n
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/227884
+
+
+    Rilasciato dashboard-module v7.12.8    
+    Merge effettuati
+    Da compilare portal
+
+# https://abacogroup.easyredmine.com/issues/228479
+
+    BRNACH: feat/228479-transition-dossier-multiple-errors-scrollbar
+    MODULE: agreements-module
+
+    Rilasciato agreements-module
     non necessario aggiornamento i18n
     Da compilare portal
 
 
+# https://abacogroup.easyredmine.com/issues/241238
 
+    BRNACH: feat/241238-protocollazione-stati-pua
+    MODULE: pua-module
 
-Note: as this is the 3th time that the ticket is returning, to prevent returning the ticket, suggets any modification on the implementaion
-
-what are the DS files for the FS004
-
+    Rilasciato pua-module
+    necessario aggiornamento i18n
+    Da compilare portal

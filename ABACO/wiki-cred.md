@@ -42,14 +42,15 @@
 # VPN-ForticliCategorient VPN Credential
 
     username: nikzad.behnam@esterni.bluarancio.com
-    passowerd: KWatrbw43Sq4GH&
+    passowerd: K12@#&AbAC98234$&
     help line: serverfarm@bluarancio.com
 
     We invite you to renew your password as follows:
 
-    1. connect to https://resetpassword.bluarancio.com
-    2. select "domus.dom" from the drop-down menu
-    3. when requested, enter the username without specifying any domain (“name.surname” format, without any @dominio.it)
+    1. connect to https://resetpassword.bluarancio.com - > OLD LINK
+    2. connect to https://resetpwd.bluarancio.com/authorization.do - >  NEW LINK
+    3. select "domus.dom" from the drop-down menu
+    4. when requested, enter the username without specifying any domain (“name.surname” format, without any @dominio.it)s
 
 ---
 
@@ -160,5 +161,3 @@ dictionary_workers
 # gitlab
 n.behnam@abacogroup.eu
 Beh@1993
-
-
